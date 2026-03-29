@@ -97,6 +97,44 @@ export function generateBreadcrumbJsonLd(
   };
 }
 
+export function generateQAPageJsonLd(
+  question: { title: string; body: string; authorName: string; createdAt: string; slug: string },
+  answers: { authorName: string; body: string; upvotes: number; createdAt: string; isAccepted: boolean }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "QAPage",
+    mainEntity: {
+      "@type": "Question",
+      name: question.title,
+      text: question.body,
+      author: { "@type": "Person", name: question.authorName },
+      dateCreated: question.createdAt,
+      answerCount: answers.length,
+      ...(answers.length > 0 && {
+        acceptedAnswer: answers.find((a) => a.isAccepted)
+          ? {
+              "@type": "Answer",
+              text: answers.find((a) => a.isAccepted)!.body,
+              author: { "@type": "Person", name: answers.find((a) => a.isAccepted)!.authorName },
+              dateCreated: answers.find((a) => a.isAccepted)!.createdAt,
+              upvoteCount: answers.find((a) => a.isAccepted)!.upvotes,
+            }
+          : undefined,
+        suggestedAnswer: answers
+          .filter((a) => !a.isAccepted)
+          .map((a) => ({
+            "@type": "Answer",
+            text: a.body,
+            author: { "@type": "Person", name: a.authorName },
+            dateCreated: a.createdAt,
+            upvoteCount: a.upvotes,
+          })),
+      }),
+    },
+  };
+}
+
 export function generateCityDirectoryJsonLd(
   cityName: string,
   citySlug: string,

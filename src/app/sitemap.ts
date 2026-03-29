@@ -5,7 +5,7 @@ import { categories } from "@/lib/data/categories";
 import { sampleListings } from "@/lib/data/sample-listings";
 import { sampleBlogPosts } from "@/lib/data/sample-blog";
 import { neighborhoods } from "@/lib/data/neighborhoods";
-import { sampleQuestions } from "@/lib/data/community";
+import { sampleQuestions, getPopularTags } from "@/lib/data/community";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
@@ -89,6 +89,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  const communityTagPages: MetadataRoute.Sitemap = getPopularTags().map(({ tag }) => ({
+    url: `${SITE_URL}/community/tag/${tag}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.4,
+  }));
+
   return [
     ...staticPages,
     ...cityPages,
@@ -97,6 +104,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...listingPages,
     ...blogPages,
     ...communityPages,
+    ...communityTagPages,
     ...neighborhoodPages,
   ];
 }
