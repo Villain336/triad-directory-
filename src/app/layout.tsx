@@ -3,6 +3,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import JsonLd from "@/components/seo/JsonLd";
+import Analytics from "@/components/Analytics";
 import { defaultMetadata } from "@/lib/seo/metadata";
 import { generateOrganizationJsonLd, generateWebSiteJsonLd } from "@/lib/seo/jsonld";
 
@@ -12,6 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col font-sans antialiased">
+        <Analytics />
         <JsonLd data={generateOrganizationJsonLd()} />
         <JsonLd data={generateWebSiteJsonLd()} />
         <Header />
