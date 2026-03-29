@@ -13,28 +13,30 @@
  * and seed approximately 1,000-1,500 real business listings across 7 major
  * cities and 14 service categories.
  *
- * Run monthly to keep data fresh. Safe to re-run — uses upsert on slug.
+ * Run monthly to keep data fresh. Safe to re-run — skips duplicates by slug.
  */
 
 const SUPABASE_URL = "https://fopomlrqwzghbjamcrkf.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZvcG9tbHJxd3pnaGJqYW1jcmtmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4MTUwNzYsImV4cCI6MjA5MDM5MTA3Nn0.XSkh5FXzfTMHn-vQH257UuUW7Mwlcv-mVEgf_vdTUJQ";
-const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY || "AIzaSyBqtm0jTIWP3eHh-iKZHgT3hSRZVnlLllY";
+const GOOGLE_API_KEY = process.env.GOOGLE_PLACES_API_KEY || "";
+
+if (!GOOGLE_API_KEY) {
+  console.error("❌ GOOGLE_PLACES_API_KEY is required. Set it in .env.local");
+  process.exit(1);
+}
 
 // Priority cities and categories to seed first
 const SEED_PLAN = [
-  // Major Triad cities
   { city: "greensboro", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing", "general-contractors", "cleaning-services", "landscaping", "auto-repair", "restaurants", "dentists", "attorneys", "handyman"] },
   { city: "winston-salem", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing", "general-contractors", "cleaning-services", "landscaping", "auto-repair", "restaurants", "dentists"] },
   { city: "high-point", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing", "general-contractors", "cleaning-services"] },
   { city: "burlington", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing"] },
-  // Major Triangle cities
   { city: "raleigh", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing", "general-contractors", "cleaning-services", "landscaping", "auto-repair", "restaurants", "dentists", "attorneys", "handyman"] },
   { city: "durham", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing", "general-contractors", "cleaning-services"] },
   { city: "cary", categories: ["plumbers", "electricians", "hvac", "roofing", "paving-striping", "pressure-washing", "general-contractors"] },
 ];
 
-// Category name mapping for search queries
 const CATEGORY_SEARCH_TERMS: Record<string, string> = {
   plumbers: "plumber plumbing",
   electricians: "electrician electrical",
@@ -52,37 +54,68 @@ const CATEGORY_SEARCH_TERMS: Record<string, string> = {
   handyman: "handyman home repair",
 };
 
-interface SupabaseRow {
-  id: string;
-  slug: string;
-  name?: string;
-  latitude?: number;
-  longitude?: number;
-}
-
 function slugify(text: string): string {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 80);
 }
 
-async function supabaseQuery(path: string, options: RequestInit = {}) {
+// Track slugs we've already used in this run to avoid collisions
+const usedSlugs = new Set<string>();
+
+function makeUniqueSlug(name: string, cityName: string, catSlug: string): string {
+  let slug = `${slugify(name)}-${slugify(cityName)}`;
+
+  // If slug collision, append category
+  if (usedSlugs.has(slug)) {
+    slug = `${slugify(name)}-${catSlug}-${slugify(cityName)}`;
+  }
+
+  // If still collision, append random suffix
+  if (usedSlugs.has(slug)) {
+    slug = `${slug}-${Date.now().toString(36).slice(-4)}`;
+  }
+
+  usedSlugs.add(slug);
+  return slug;
+}
+
+async function supabaseGet(path: string) {
   const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
-    ...options,
+    headers: {
+      apikey: SUPABASE_ANON_KEY,
+      Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    },
+  });
+  if (!res.ok) {
+    throw new Error(`Supabase GET error ${res.status}: ${await res.text()}`);
+  }
+  return res.json();
+}
+
+async function supabaseInsert(table: string, data: Record<string, unknown>) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+    method: "POST",
     headers: {
       apikey: SUPABASE_ANON_KEY,
       Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
       "Content-Type": "application/json",
-      Prefer: options.method === "POST" ? "return=representation,resolution=merge-duplicates" : "return=representation",
-      ...options.headers,
+      Prefer: "return=minimal",
     },
+    body: JSON.stringify(data),
   });
+
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Supabase error ${res.status}: ${text}`);
+    // Duplicate key = skip silently
+    if (text.includes("duplicate") || text.includes("unique") || text.includes("23505")) {
+      return { status: "duplicate" };
+    }
+    throw new Error(`Insert error ${res.status}: ${text}`);
   }
-  return res.json();
+  return { status: "created" };
 }
 
 async function searchGooglePlaces(query: string, lat: number, lng: number) {
@@ -106,6 +139,11 @@ async function searchGooglePlaces(query: string, lat: number, lng: number) {
     }),
   });
 
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Google Places error ${res.status}: ${text.slice(0, 200)}`);
+  }
+
   const data = await res.json();
   return data.places || [];
 }
@@ -114,11 +152,13 @@ async function main() {
   console.log("=== NC Service Businesses — Google Places Seed ===\n");
 
   // Get all cities and categories from DB
-  const cities: SupabaseRow[] = await supabaseQuery("cities?select=id,slug,name,latitude,longitude");
-  const categories: SupabaseRow[] = await supabaseQuery("categories?select=id,slug,name");
+  const cities = await supabaseGet("cities?select=id,slug,name,latitude,longitude");
+  const categories = await supabaseGet("categories?select=id,slug,name");
 
-  const cityMap = new Map(cities.map((c) => [c.slug, c]));
-  const catMap = new Map(categories.map((c) => [c.slug, c]));
+  console.log(`📊 Database: ${cities.length} cities, ${categories.length} categories\n`);
+
+  const cityMap = new Map(cities.map((c: any) => [c.slug, c]));
+  const catMap = new Map(categories.map((c: any) => [c.slug, c]));
 
   let totalCreated = 0;
   let totalSkipped = 0;
@@ -144,81 +184,88 @@ async function main() {
       const searchTerm = CATEGORY_SEARCH_TERMS[catSlug] || category.name;
       const query = `${searchTerm} in ${city.name}, NC`;
 
-      console.log(`  🔍 Searching: "${query}"`);
+      console.log(`  🔍 "${query}"`);
       apiCalls++;
 
       try {
-        const places = await searchGooglePlaces(query, city.latitude!, city.longitude!);
-        console.log(`     Found ${places.length} results`);
+        const places = await searchGooglePlaces(query, city.latitude, city.longitude);
+        let created = 0;
+        let skipped = 0;
 
         for (const place of places) {
           const name = place.displayName?.text;
           if (!name) continue;
-
-          // Skip if business is permanently closed
           if (place.businessStatus === "CLOSED_PERMANENTLY") continue;
 
-          const baseSlug = slugify(name);
-          const slug = `${baseSlug}-${slugify(city.name!)}`;
+          const slug = makeUniqueSlug(name, city.name, catSlug);
 
           const phone = place.nationalPhoneNumber?.replace(/\D/g, "") ||
             place.internationalPhoneNumber?.replace(/\D/g, "") || null;
 
-          const business = {
-            name,
-            slug,
-            short_description: `${category.name} serving ${city.name}, NC and surrounding areas.`,
-            city_id: city.id,
-            category_id: category.id,
-            phone,
-            website: place.websiteUri || null,
-            address: place.formattedAddress || null,
-            city_name: city.name,
-            state: "NC",
-            latitude: place.location?.latitude || null,
-            longitude: place.location?.longitude || null,
-            rating: place.rating || 0,
-            review_count: place.userRatingCount || 0,
-            tier: "free",
-            status: "active",
-            is_verified: false,
-            is_featured: false,
-            data_source: "google_places",
-            external_id: place.id,
-            last_synced_at: new Date().toISOString(),
-          };
-
           try {
-            await supabaseQuery("businesses", {
-              method: "POST",
-              body: JSON.stringify(business),
-              headers: { Prefer: "return=representation,resolution=merge-duplicates" },
+            const result = await supabaseInsert("businesses", {
+              name,
+              slug,
+              short_description: `${category.name} serving ${city.name}, NC and surrounding areas.`,
+              city_id: city.id,
+              category_id: category.id,
+              phone,
+              website: place.websiteUri || null,
+              address: place.formattedAddress || null,
+              city_name: city.name,
+              state: "NC",
+              latitude: place.location?.latitude || null,
+              longitude: place.location?.longitude || null,
+              rating: place.rating || 0,
+              review_count: place.userRatingCount || 0,
+              tier: "free",
+              status: "active",
+              is_verified: false,
+              is_featured: false,
+              data_source: "google_places",
+              external_id: place.id,
+              last_synced_at: new Date().toISOString(),
             });
-            totalCreated++;
-          } catch (err: any) {
-            if (err.message?.includes("duplicate") || err.message?.includes("unique")) {
-              totalSkipped++;
+
+            if (result.status === "created") {
+              created++;
+              totalCreated++;
             } else {
-              totalErrors++;
-              console.log(`     ❌ Error inserting "${name}": ${err.message?.slice(0, 80)}`);
+              skipped++;
+              totalSkipped++;
+            }
+          } catch (err: any) {
+            totalErrors++;
+            if (!err.message?.includes("duplicate")) {
+              console.log(`     ❌ "${name}": ${err.message?.slice(0, 80)}`);
+            } else {
+              totalSkipped++;
             }
           }
         }
 
-        // Rate limit: wait 200ms between API calls
-        await new Promise((r) => setTimeout(r, 200));
+        console.log(`     ✅ ${created} created, ${skipped} skipped (${places.length} found)`);
+
+        // Rate limit: wait 300ms between API calls
+        await new Promise((r) => setTimeout(r, 300));
       } catch (err: any) {
-        console.log(`     ❌ Google API error: ${err.message?.slice(0, 100)}`);
+        console.log(`     ❌ API error: ${err.message?.slice(0, 100)}`);
         totalErrors++;
       }
     }
   }
 
-  console.log("\n=== SEED COMPLETE ===");
-  console.log(`API calls made: ${apiCalls}`);
+  console.log("\n" + "=".repeat(50));
+  console.log("SEED COMPLETE");
+  console.log("=".repeat(50));
+  console.log(`Google API calls: ${apiCalls}`);
   console.log(`Businesses created: ${totalCreated}`);
   console.log(`Duplicates skipped: ${totalSkipped}`);
   console.log(`Errors: ${totalErrors}`);
+  console.log(`\nYour site now has real listings! 🎉`);
 }
 
-main().catch(console.error);
+main().catch((err) => {
+  console.error("Fatal error:", err);
+  process.exit(1);
+});
