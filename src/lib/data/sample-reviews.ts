@@ -107,6 +107,26 @@ export const sampleReviews: Review[] = [
     isVerified: true,
     createdAt: "2024-05-30",
   },
+  {
+    id: "r11",
+    listingId: "13",
+    authorName: "Mike C.",
+    rating: 5,
+    content: "Triad Paving restriped our entire 200-space parking lot in one day. Clean lines, ADA-compliant markings, and they even re-did our fire lane markings. Very professional crew. Will use again for sealcoating next spring.",
+    isVerified: true,
+    createdAt: "2024-05-18",
+    ownerResponse: "Thanks Mike! We take pride in getting commercial jobs done fast without cutting corners. Looking forward to the sealcoating project!",
+    ownerResponseDate: "2024-05-19",
+  },
+  {
+    id: "r12",
+    listingId: "13",
+    authorName: "Karen L.",
+    rating: 5,
+    content: "Had our church parking lot paved and striped. They handled the whole project from tear-out to final striping. Great communication throughout and finished ahead of schedule. Fair price for excellent work.",
+    isVerified: true,
+    createdAt: "2024-04-02",
+  },
 ];
 
 export function getReviewsByListingId(listingId: string): Review[] {

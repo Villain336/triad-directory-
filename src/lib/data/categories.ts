@@ -240,6 +240,13 @@ export const categories: Category[] = [
     featured: false,
   },
   {
+    name: "Paving & Striping",
+    slug: "paving-striping",
+    description: "Asphalt paving, parking lot striping, sealcoating, and line marking services",
+    icon: "Construction",
+    featured: true,
+  },
+  {
     name: "Flooring",
     slug: "flooring",
     description: "Hardwood, tile, carpet, and vinyl flooring installation",

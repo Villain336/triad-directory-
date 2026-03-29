@@ -146,6 +146,23 @@ export const costEstimates: CostEstimate[] = [
     description:
       "Interior painting in the Triad costs $2-$5 per square foot. A full interior paint job for an average home runs $2,500-$5,000. Exterior painting ranges from $3,000-$8,000.",
   },
+  {
+    categorySlug: "paving-striping",
+    categoryName: "Paving & Striping",
+    lowEnd: 200,
+    average: 3500,
+    highEnd: 25000,
+    unit: "per project",
+    factors: [
+      "Project type (striping only vs. full paving)",
+      "Square footage / linear footage",
+      "Asphalt thickness and base prep",
+      "Parking lot size and stall count",
+      "ADA compliance requirements",
+    ],
+    description:
+      "Parking lot striping in the Triad runs $200-$1,500 depending on lot size. Residential driveway paving averages $3,000-$7,000. Full commercial parking lot paving ranges from $10,000-$50,000+. Sealcoating runs $0.15-$0.30 per square foot.",
+  },
 ];
 
 export function getCostEstimateByCategory(slug: string): CostEstimate | undefined {

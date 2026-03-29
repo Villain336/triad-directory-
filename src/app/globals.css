@@ -10,7 +10,7 @@
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-beige-50 text-gray-900;
   }
 }
 
@@ -28,7 +28,7 @@
   }
 
   .btn-accent {
-    @apply inline-flex items-center justify-center rounded-lg bg-accent-500 px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm transition-all hover:bg-accent-400 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2;
+    @apply inline-flex items-center justify-center rounded-lg bg-accent-400 px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm transition-all hover:bg-accent-300 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2;
   }
 
   .card {
