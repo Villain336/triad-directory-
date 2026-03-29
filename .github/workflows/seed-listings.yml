@@ -5,6 +5,9 @@ on:
   schedule:
     - cron: '0 11 1 * *'
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   seed:
     runs-on: ubuntu-latest
@@ -15,7 +18,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install dependencies
         run: npm install
@@ -24,7 +27,6 @@ jobs:
         run: |
           if [ -z "$GOOGLE_PLACES_API_KEY" ]; then
             echo "ERROR: GOOGLE_PLACES_API_KEY secret is not set"
-            echo "Go to repo Settings → Secrets → Actions → New repository secret"
             exit 1
           fi
           echo "API key is set (length: ${#GOOGLE_PLACES_API_KEY})"
