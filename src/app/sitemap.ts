@@ -5,6 +5,7 @@ import { categories } from "@/lib/data/categories";
 import { sampleListings } from "@/lib/data/sample-listings";
 import { sampleBlogPosts } from "@/lib/data/sample-blog";
 import { neighborhoods } from "@/lib/data/neighborhoods";
+import { sampleQuestions } from "@/lib/data/community";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
@@ -19,6 +20,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/claim-listing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/tools/cost-estimator`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${SITE_URL}/compare`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    { url: `${SITE_URL}/community`, lastModified: new Date(), changeFrequency: "daily", priority: 0.7 },
+    { url: `${SITE_URL}/price-check`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/deals`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
+    { url: `${SITE_URL}/emergency`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
+    { url: `${SITE_URL}/partners`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
+    { url: `${SITE_URL}/media-kit`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
   ];
 
   // City pages
@@ -74,6 +81,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
+  // Community Q&A pages
+  const communityPages: MetadataRoute.Sitemap = sampleQuestions.map((q) => ({
+    url: `${SITE_URL}/community/${q.slug}`,
+    lastModified: new Date(q.createdAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.5,
+  }));
+
   return [
     ...staticPages,
     ...cityPages,
@@ -81,6 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...categoryPages,
     ...listingPages,
     ...blogPages,
+    ...communityPages,
     ...neighborhoodPages,
   ];
 }

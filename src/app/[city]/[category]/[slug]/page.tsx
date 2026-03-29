@@ -18,6 +18,7 @@ import { getCityBySlug } from "@/lib/data/cities";
 import { getCategoryBySlug } from "@/lib/data/categories";
 import { sampleListings, getListingsByCityAndCategory } from "@/lib/data/sample-listings";
 import { getReviewsByListingId } from "@/lib/data/sample-reviews";
+import { getProjectsByListingId } from "@/lib/data/projects";
 import { generateListingMetadata } from "@/lib/seo/metadata";
 import { generateLocalBusinessJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { formatPhone } from "@/lib/utils";
@@ -32,6 +33,7 @@ import OpenStatus from "@/components/listings/OpenStatus";
 import StickyCallBar from "@/components/lead-gen/StickyCallBar";
 import dynamic from "next/dynamic";
 import ListingGallery from "@/components/listings/ListingGallery";
+import ProjectShowcase from "@/components/listings/ProjectShowcase";
 
 const ListingMap = dynamic(() => import("@/components/listings/ListingMap"), {
   ssr: false,
@@ -78,6 +80,7 @@ export default function ListingPage({ params }: ListingPageProps) {
 
   const isPremium = listing.tier === "premium" || listing.tier === "elite";
   const reviews = getReviewsByListingId(listing.id);
+  const projects = getProjectsByListingId(listing.id);
   const relatedListings = getListingsByCityAndCategory(city.slug, category.slug)
     .filter((l) => l.id !== listing.id)
     .slice(0, 2);
@@ -317,6 +320,16 @@ export default function ListingPage({ params }: ListingPageProps) {
                   address={`${listing.address}, ${listing.city}, ${listing.state} ${listing.zip}`}
                 />
               </section>
+            )}
+
+            {/* Project Portfolio */}
+            {isPremium && projects.length > 0 && (
+              <div className="mt-10">
+                <ProjectShowcase
+                  projects={projects}
+                  businessName={listing.businessName}
+                />
+              </div>
             )}
 
             {/* Reviews */}

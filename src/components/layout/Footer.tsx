@@ -140,8 +140,28 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/community" className="text-sm text-gray-600 hover:text-primary-600">
+                  Community Q&A
+                </Link>
+              </li>
+              <li>
+                <Link href="/deals" className="text-sm text-gray-600 hover:text-primary-600">
+                  Deals & Promotions
+                </Link>
+              </li>
+              <li>
+                <Link href="/emergency" className="text-sm text-gray-600 hover:text-primary-600">
+                  Emergency Services
+                </Link>
+              </li>
+              <li>
                 <Link href="/tools/cost-estimator" className="text-sm text-gray-600 hover:text-primary-600">
                   Cost Estimator
+                </Link>
+              </li>
+              <li>
+                <Link href="/price-check" className="text-sm text-gray-600 hover:text-primary-600">
+                  Price Check
                 </Link>
               </li>
               <li>

@@ -119,10 +119,16 @@ export default function Header() {
                 Categories
               </Link>
               <Link
-                href="/blog"
+                href="/community"
                 className="text-sm font-medium text-gray-700 hover:text-primary-600"
               >
-                Blog
+                Community
+              </Link>
+              <Link
+                href="/deals"
+                className="text-sm font-medium text-gray-700 hover:text-primary-600"
+              >
+                Deals
               </Link>
               <Link href="/advertise" className="btn-primary text-sm !py-2 !px-4">
                 Get Listed
