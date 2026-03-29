@@ -1,9 +1,7 @@
 name: Seed Listings from Google Places
 
 on:
-  # Run manually from GitHub Actions tab
   workflow_dispatch:
-  # Or run monthly on the 1st at 6am EST
   schedule:
     - cron: '0 11 1 * *'
 
@@ -18,9 +16,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify API key exists
+        run: |
+          if [ -z "$GOOGLE_PLACES_API_KEY" ]; then
+            echo "ERROR: GOOGLE_PLACES_API_KEY secret is not set"
+            echo "Go to repo Settings → Secrets → Actions → New repository secret"
+            exit 1
+          fi
+          echo "API key is set (length: ${#GOOGLE_PLACES_API_KEY})"
+        env:
+          GOOGLE_PLACES_API_KEY: ${{ secrets.GOOGLE_PLACES_API_KEY }}
 
       - name: Run seed script
         env:
