@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { searchListings } from "@/lib/data/sample-listings";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
@@ -9,20 +9,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [], message: "Query too short" });
   }
 
-  const results = searchListings(query);
+  const supabase = createServerClient();
+
+  const { data: results } = await supabase
+    .from("businesses")
+    .select("id, name, slug, short_description, rating, city_name, tier, cities!inner(slug), categories!inner(slug)")
+    .or(`name.ilike.%${query}%,description.ilike.%${query}%,short_description.ilike.%${query}%`)
+    .eq("status", "active")
+    .order("tier")
+    .order("rating", { ascending: false })
+    .limit(20);
 
   return NextResponse.json({
-    results: results.map((l) => ({
-      id: l.id,
-      businessName: l.businessName,
-      slug: l.slug,
-      citySlug: l.citySlug,
-      categorySlug: l.categorySlug,
-      shortDescription: l.shortDescription,
-      rating: l.rating,
-      city: l.city,
-      tier: l.tier,
-    })),
-    count: results.length,
+    results: results || [],
+    count: results?.length || 0,
   });
 }

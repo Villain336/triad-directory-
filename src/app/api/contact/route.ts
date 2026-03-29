@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,13 +13,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // In production, save to Supabase and send email notification
-    console.log("Contact form submission:", {
+    const supabase = createServerClient();
+
+    await supabase.from("leads").insert({
       name,
       email,
       phone,
-      message: message.slice(0, 200),
-      timestamp: new Date().toISOString(),
+      message,
+      source: "contact_form",
+      source_page: request.headers.get("referer"),
     });
 
     return NextResponse.json({ success: true });

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -9,16 +10,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // In production, save to Supabase:
-    // await supabase.from('click_events').insert({ listing_id: listingId, event_type: eventType, source_page: sourcePage })
-    // await supabase.rpc('increment_click_count', { listing_id: listingId })
+    const supabase = createServerClient();
 
-    console.log("Click tracked:", {
-      listingId,
-      eventType, // phone_click, website_click, directions_click
-      sourcePage,
-      timestamp: new Date().toISOString(),
+    await supabase.from("click_events").insert({
+      business_id: listingId,
+      event_type: eventType,
+      source_page: sourcePage,
     });
+
+    await supabase.rpc("increment_click_count", { business_id: listingId });
 
     return NextResponse.json({ success: true });
   } catch {
