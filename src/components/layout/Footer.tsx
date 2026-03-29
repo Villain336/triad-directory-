@@ -44,8 +44,8 @@ export default function Footer() {
               <span className="text-lg font-bold text-gray-900">{SITE_NAME}</span>
             </Link>
             <p className="mt-3 text-sm text-gray-600">
-              The Piedmont Triad&apos;s most comprehensive business and services
-              directory. Connecting local customers with trusted businesses since 2024.
+              North Carolina&apos;s most comprehensive service business directory.
+              Connecting customers with trusted pros across the Triad, Triangle & beyond.
             </p>
             <div className="mt-4 text-sm text-gray-500 space-y-1">
               <p>
@@ -167,6 +167,11 @@ export default function Footer() {
               <li>
                 <Link href="/compare" className="text-sm text-gray-600 hover:text-primary-600">
                   Compare Businesses
+                </Link>
+              </li>
+              <li>
+                <Link href="/request-service" className="text-sm text-gray-600 hover:text-primary-600">
+                  Request a Service
                 </Link>
               </li>
               <li>

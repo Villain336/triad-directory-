@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/emergency`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/partners`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/media-kit`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${SITE_URL}/request-service`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
   ];
 
   // City pages

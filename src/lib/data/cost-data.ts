@@ -163,6 +163,23 @@ export const costEstimates: CostEstimate[] = [
     description:
       "Parking lot striping in the Triad runs $200-$1,500 depending on lot size. Residential driveway paving averages $3,000-$7,000. Full commercial parking lot paving ranges from $10,000-$50,000+. Sealcoating runs $0.15-$0.30 per square foot.",
   },
+  {
+    categorySlug: "pressure-washing",
+    categoryName: "Pressure Washing",
+    lowEnd: 100,
+    average: 300,
+    highEnd: 800,
+    unit: "per service",
+    factors: [
+      "Surface type (concrete, wood, vinyl, brick)",
+      "Total square footage",
+      "Hot water vs. cold water cleaning",
+      "Height and accessibility (2-story homes cost more)",
+      "Soft wash vs. high-pressure method",
+    ],
+    description:
+      "Driveway pressure washing in NC runs $100-$250 depending on size. Full house wash (siding) averages $250-$500. Deck cleaning runs $150-$300. Commercial parking lot and building washing ranges from $300-$1,500+.",
+  },
 ];
 
 export function getCostEstimateByCategory(slug: string): CostEstimate | undefined {

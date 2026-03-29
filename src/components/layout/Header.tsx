@@ -23,7 +23,7 @@ export default function Header() {
             </a>
             <span className="hidden sm:inline text-primary-300">|</span>
             <span className="hidden sm:inline text-primary-200">
-              Serving the Piedmont Triad, NC
+              Serving the Triad, Triangle & Across NC
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -50,7 +50,7 @@ export default function Header() {
               <div>
                 <span className="text-xl font-bold text-gray-900">{SITE_NAME}</span>
                 <span className="hidden sm:block text-xs text-gray-500">
-                  Greensboro • Winston-Salem • High Point
+                  Triad • Triangle • Across NC
                 </span>
               </div>
             </Link>
@@ -130,8 +130,8 @@ export default function Header() {
               >
                 Deals
               </Link>
-              <Link href="/advertise" className="btn-primary text-sm !py-2 !px-4">
-                Get Listed
+              <Link href="/request-service" className="btn-primary text-sm !py-2 !px-4">
+                Request Service
               </Link>
             </nav>
 

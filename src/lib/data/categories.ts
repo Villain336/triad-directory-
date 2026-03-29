@@ -247,6 +247,13 @@ export const categories: Category[] = [
     featured: true,
   },
   {
+    name: "Pressure Washing",
+    slug: "pressure-washing",
+    description: "Residential and commercial pressure washing for driveways, decks, siding, and parking lots",
+    icon: "Droplets",
+    featured: true,
+  },
+  {
     name: "Flooring",
     slug: "flooring",
     description: "Hardwood, tile, carpet, and vinyl flooring installation",

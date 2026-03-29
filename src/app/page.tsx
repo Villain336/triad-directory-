@@ -23,14 +23,14 @@ import NewsletterSignup from "@/components/lead-gen/NewsletterSignup";
 import QuoteRequestForm from "@/components/lead-gen/QuoteRequestForm";
 
 export const metadata: Metadata = {
-  title: `${SITE_NAME} - Find Trusted Local Businesses & Services in the NC Triad`,
+  title: `${SITE_NAME} - Find Trusted Service Pros Across North Carolina`,
   description:
-    "The Piedmont Triad's #1 business directory. Find verified plumbers, electricians, HVAC, contractors, restaurants & more in Greensboro, Winston-Salem, High Point & 30+ cities. Free quotes.",
+    "North Carolina's #1 service business directory. Find verified contractors, trades, and professionals in the Triad, Triangle, Raleigh, Greensboro, Winston-Salem & 45+ cities. Free quotes.",
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: `${SITE_NAME} - Find Trusted Local Businesses & Services in the NC Triad`,
+    title: `${SITE_NAME} - Find Trusted Service Pros Across North Carolina`,
     description:
-      "The Piedmont Triad's #1 business directory. Find verified local businesses in Greensboro, Winston-Salem, High Point & 30+ cities.",
+      "North Carolina's #1 service business directory. Find verified pros in the Triad, Triangle & 45+ cities.",
     url: SITE_URL,
     type: "website",
   },
@@ -49,12 +49,12 @@ export default function HomePage() {
         <div className="container-main relative py-16 sm:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-              Find Trusted Local Businesses in the{" "}
-              <span className="text-accent-400">Triad</span>
+              Find Trusted Service Pros Across{" "}
+              <span className="text-accent-400">North Carolina</span>
             </h1>
             <p className="mt-4 text-lg text-primary-200 sm:text-xl">
-              The Piedmont Triad&apos;s most comprehensive directory of services, trades,
-              and businesses. Greensboro, Winston-Salem, High Point & 30+ cities.
+              NC&apos;s most comprehensive directory of service businesses, trades,
+              and contractors. Triad, Triangle, Raleigh, Greensboro & 45+ cities.
             </p>
 
             {/* Search Bar */}
