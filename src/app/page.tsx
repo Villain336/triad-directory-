@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import {
   Search,
@@ -9,13 +10,31 @@ import {
   TrendingUp,
   Phone,
   CheckCircle,
+  MessageSquare,
 } from "lucide-react";
 import { cities, getFeaturedCities } from "@/lib/data/cities";
 import { getFeaturedCategories } from "@/lib/data/categories";
 import { getFeaturedListings } from "@/lib/data/sample-listings";
+import { sampleReviews } from "@/lib/data/sample-reviews";
+import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import ListingCard from "@/components/listings/ListingCard";
 import AdSlot from "@/components/ads/AdSlot";
 import NewsletterSignup from "@/components/lead-gen/NewsletterSignup";
+import QuoteRequestForm from "@/components/lead-gen/QuoteRequestForm";
+
+export const metadata: Metadata = {
+  title: `${SITE_NAME} - Find Trusted Local Businesses & Services in the NC Triad`,
+  description:
+    "The Piedmont Triad's #1 business directory. Find verified plumbers, electricians, HVAC, contractors, restaurants & more in Greensboro, Winston-Salem, High Point & 30+ cities. Free quotes.",
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    title: `${SITE_NAME} - Find Trusted Local Businesses & Services in the NC Triad`,
+    description:
+      "The Piedmont Triad's #1 business directory. Find verified local businesses in Greensboro, Winston-Salem, High Point & 30+ cities.",
+    url: SITE_URL,
+    type: "website",
+  },
+};
 
 export default function HomePage() {
   const featuredCities = getFeaturedCities();
@@ -218,6 +237,85 @@ export default function HomePage() {
             {featuredListings.map((listing) => (
               <ListingCard key={listing.id} listing={listing} showCity />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Recent Reviews - Social Proof */}
+      <section className="bg-gray-50 py-12 sm:py-16 border-t border-gray-100">
+        <div className="container-main">
+          <div className="text-center">
+            <h2 className="section-heading">What Triad Residents Are Saying</h2>
+            <p className="section-subheading">
+              Real reviews from real customers across the Piedmont Triad
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {sampleReviews.slice(0, 6).map((review) => (
+              <div key={review.id} className="card p-5">
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-3.5 w-3.5 ${
+                        i < review.rating
+                          ? "fill-accent-400 text-accent-400"
+                          : "fill-gray-200 text-gray-200"
+                      }`}
+                      aria-hidden="true"
+                    />
+                  ))}
+                </div>
+                <p className="mt-2 text-sm text-gray-600 line-clamp-3">
+                  &quot;{review.content}&quot;
+                </p>
+                <div className="mt-3 flex items-center justify-between text-xs text-gray-500">
+                  <span className="font-medium text-gray-700">{review.authorName}</span>
+                  {review.isVerified && (
+                    <span className="flex items-center gap-0.5 text-green-600">
+                      <CheckCircle className="h-3 w-3" aria-hidden="true" />
+                      Verified
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Quote Request Form */}
+      <section className="py-12 sm:py-16">
+        <div className="container-main">
+          <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div>
+              <h2 className="section-heading">
+                Need a Pro? Get Free Quotes in Minutes
+              </h2>
+              <p className="section-subheading">
+                Tell us what you need and we&apos;ll connect you with top-rated
+                professionals in your area. No obligation, no cost.
+              </p>
+              <div className="mt-6 space-y-3 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500 shrink-0" aria-hidden="true" />
+                  <span>Get 2-3 quotes from verified professionals</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500 shrink-0" aria-hidden="true" />
+                  <span>Compare ratings, reviews, and pricing</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500 shrink-0" aria-hidden="true" />
+                  <span>Responses typically within 24 hours</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5 text-primary-500 shrink-0" aria-hidden="true" />
+                  <span><strong>100% free</strong> — no hidden costs or obligations</span>
+                </div>
+              </div>
+            </div>
+            <QuoteRequestForm />
           </div>
         </div>
       </section>

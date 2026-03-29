@@ -17,6 +17,7 @@ import {
 import { getCityBySlug } from "@/lib/data/cities";
 import { getCategoryBySlug } from "@/lib/data/categories";
 import { sampleListings, getListingsByCityAndCategory } from "@/lib/data/sample-listings";
+import { getReviewsByListingId } from "@/lib/data/sample-reviews";
 import { generateListingMetadata } from "@/lib/seo/metadata";
 import { generateLocalBusinessJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { formatPhone } from "@/lib/utils";
@@ -25,6 +26,10 @@ import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import ListingCard from "@/components/listings/ListingCard";
 import AdSlot from "@/components/ads/AdSlot";
 import ContactForm from "@/components/lead-gen/ContactForm";
+import ReviewSection from "@/components/listings/ReviewSection";
+import TrustBadges from "@/components/listings/TrustBadges";
+import OpenStatus from "@/components/listings/OpenStatus";
+import StickyCallBar from "@/components/lead-gen/StickyCallBar";
 
 interface ListingPageProps {
   params: { city: string; category: string; slug: string };
@@ -61,6 +66,7 @@ export default function ListingPage({ params }: ListingPageProps) {
   if (!listing || !city || !category) notFound();
 
   const isPremium = listing.tier === "premium" || listing.tier === "elite";
+  const reviews = getReviewsByListingId(listing.id);
   const relatedListings = getListingsByCityAndCategory(city.slug, category.slug)
     .filter((l) => l.id !== listing.id)
     .slice(0, 2);
@@ -68,6 +74,7 @@ export default function ListingPage({ params }: ListingPageProps) {
   return (
     <>
       <JsonLd data={generateLocalBusinessJsonLd(listing)} />
+      <StickyCallBar phone={listing.phone} businessName={listing.businessName} />
       <JsonLd
         data={generateBreadcrumbJsonLd([
           { name: "Home", url: "/" },
@@ -90,7 +97,7 @@ export default function ListingPage({ params }: ListingPageProps) {
         />
       </div>
 
-      <div className="container-main pb-12">
+      <div className="container-main pb-24 lg:pb-12">
         <div className="grid gap-8 lg:grid-cols-3">
           {/* Main Content */}
           <div className="lg:col-span-2">
@@ -117,11 +124,22 @@ export default function ListingPage({ params }: ListingPageProps) {
                     </span>
                     {listing.isVerified && (
                       <span className="flex items-center gap-1 text-green-600">
-                        <CheckCircle className="h-4 w-4" /> Verified
+                        <CheckCircle className="h-4 w-4" aria-hidden="true" /> Verified
                       </span>
                     )}
+                    <OpenStatus hours={listing.hours} />
                   </div>
                 </div>
+              </div>
+
+              {/* Trust Badges */}
+              <div className="mt-4">
+                <TrustBadges
+                  isVerified={listing.isVerified}
+                  licenseNumber={listing.licenseNumber}
+                  yearEstablished={listing.yearEstablished}
+                  tier={listing.tier}
+                />
               </div>
 
               {/* Quick Actions */}
@@ -267,6 +285,16 @@ export default function ListingPage({ params }: ListingPageProps) {
               </section>
             )}
 
+            {/* Reviews */}
+            <div className="mt-10">
+              <ReviewSection
+                reviews={reviews}
+                businessName={listing.businessName}
+                averageRating={listing.rating}
+                totalCount={listing.reviewCount}
+              />
+            </div>
+
             <AdSlot position="banner-bottom" className="mt-8" />
 
             {/* Related Listings */}
@@ -292,7 +320,7 @@ export default function ListingPage({ params }: ListingPageProps) {
 
           {/* Sidebar */}
           <aside className="space-y-6">
-            <div className="card p-5 sticky top-20">
+            <div id="contact-form" className="card p-5 sticky top-20">
               <ContactForm
                 listingId={listing.id}
                 listingName={listing.businessName}

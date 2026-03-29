@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { CheckCircle, X } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo/metadata";
+import { generateFAQPageJsonLd } from "@/lib/seo/jsonld";
+import JsonLd from "@/components/seo/JsonLd";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Pricing - Listing Plans",
@@ -97,9 +99,38 @@ const plans = [
   },
 ];
 
+const faqs = [
+  {
+    question: "Can I cancel at any time?",
+    answer:
+      "Yes, all plans are month-to-month with no long-term contracts. Cancel anytime and your listing will revert to our free tier.",
+  },
+  {
+    question: "How quickly will my listing go live?",
+    answer:
+      "Free and Basic listings go live within 24 hours. Premium and Elite listings include a setup call and typically go live within 48 hours.",
+  },
+  {
+    question: "Can I list my business in multiple cities?",
+    answer:
+      "Free and Basic plans include one city. Premium includes up to 3 cities. Elite includes unlimited city listings across the Triad.",
+  },
+  {
+    question: "Do you offer annual billing discounts?",
+    answer:
+      "Yes! Pay annually and save 20%. Contact our sales team for annual pricing.",
+  },
+  {
+    question: "What kind of leads can I expect?",
+    answer:
+      "Results vary by category and city, but Premium listings typically see 5-15x more engagement than free listings, including phone calls, form submissions, and website clicks.",
+  },
+];
+
 export default function PricingPage() {
   return (
     <div className="container-main py-12">
+      <JsonLd data={generateFAQPageJsonLd(faqs)} />
       <div className="text-center">
         <h1 className="section-heading">Simple, Transparent Pricing</h1>
         <p className="section-subheading max-w-2xl mx-auto">
@@ -165,31 +196,10 @@ export default function PricingPage() {
           Frequently Asked Questions
         </h2>
         <div className="mt-8 space-y-6">
-          {[
-            {
-              q: "Can I cancel at any time?",
-              a: "Yes, all plans are month-to-month with no long-term contracts. Cancel anytime and your listing will revert to our free tier.",
-            },
-            {
-              q: "How quickly will my listing go live?",
-              a: "Free and Basic listings go live within 24 hours. Premium and Elite listings include a setup call and typically go live within 48 hours.",
-            },
-            {
-              q: "Can I list my business in multiple cities?",
-              a: "Free and Basic plans include one city. Premium includes up to 3 cities. Elite includes unlimited city listings across the Triad.",
-            },
-            {
-              q: "Do you offer annual billing discounts?",
-              a: "Yes! Pay annually and save 20%. Contact our sales team for annual pricing.",
-            },
-            {
-              q: "What kind of leads can I expect?",
-              a: "Results vary by category and city, but Premium listings typically see 5-15x more engagement than free listings, including phone calls, form submissions, and website clicks.",
-            },
-          ].map((faq) => (
-            <div key={faq.q}>
-              <h3 className="font-semibold text-gray-900">{faq.q}</h3>
-              <p className="mt-1 text-sm text-gray-600">{faq.a}</p>
+          {faqs.map((faq) => (
+            <div key={faq.question}>
+              <h3 className="font-semibold text-gray-900">{faq.question}</h3>
+              <p className="mt-1 text-sm text-gray-600">{faq.answer}</p>
             </div>
           ))}
         </div>

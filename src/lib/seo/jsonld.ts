@@ -116,6 +116,62 @@ export function generateCityDirectoryJsonLd(
   };
 }
 
+export function generateItemListJsonLd(
+  listings: { businessName: string; citySlug: string; categorySlug: string; slug: string }[],
+  cityName: string,
+  categoryName: string,
+  citySlug: string,
+  categorySlug: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: `Best ${categoryName} in ${cityName}, NC`,
+    description: `Top-rated ${categoryName.toLowerCase()} serving ${cityName}, North Carolina`,
+    url: `${SITE_URL}/${citySlug}/${categorySlug}`,
+    numberOfItems: listings.length,
+    itemListElement: listings.map((listing, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: listing.businessName,
+      url: `${SITE_URL}/${listing.citySlug}/${listing.categorySlug}/${listing.slug}`,
+    })),
+  };
+}
+
+export function generateFAQPageJsonLd(
+  faqs: { question: string; answer: string }[]
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+export function generateReviewJsonLd(
+  reviews: { authorName: string; rating: number; content: string; createdAt: string }[]
+) {
+  return reviews.map((review) => ({
+    "@type": "Review",
+    author: { "@type": "Person", name: review.authorName },
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: review.rating,
+      bestRating: 5,
+    },
+    reviewBody: review.content,
+    datePublished: review.createdAt,
+  }));
+}
+
 export function generateBlogPostJsonLd(post: {
   title: string;
   excerpt: string;

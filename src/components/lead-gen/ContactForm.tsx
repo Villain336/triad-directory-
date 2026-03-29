@@ -84,6 +84,7 @@ export default function ContactForm({
             id="name"
             name="name"
             required
+            autoComplete="name"
             className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
@@ -95,6 +96,7 @@ export default function ContactForm({
             type="tel"
             id="phone"
             name="phone"
+            autoComplete="tel"
             className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
           />
         </div>
@@ -109,6 +111,7 @@ export default function ContactForm({
           id="email"
           name="email"
           required
+          autoComplete="email"
           className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
         />
       </div>

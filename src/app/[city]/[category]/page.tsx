@@ -6,12 +6,13 @@ import { cities, getCityBySlug } from "@/lib/data/cities";
 import { categories, getCategoryBySlug } from "@/lib/data/categories";
 import { getListingsByCityAndCategory } from "@/lib/data/sample-listings";
 import { generateCityCategoryMetadata } from "@/lib/seo/metadata";
-import { generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
+import { generateBreadcrumbJsonLd, generateItemListJsonLd } from "@/lib/seo/jsonld";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import ListingGrid from "@/components/listings/ListingGrid";
 import AdSlot from "@/components/ads/AdSlot";
-import ContactForm from "@/components/lead-gen/ContactForm";
+import QuoteRequestForm from "@/components/lead-gen/QuoteRequestForm";
+import ExitIntentModal from "@/components/lead-gen/ExitIntentModal";
 
 interface CategoryPageProps {
   params: { city: string; category: string };
@@ -49,6 +50,21 @@ export default function CityCategoryPage({ params }: CategoryPageProps) {
           { name: city.name, url: `/${city.slug}` },
           { name: category.name, url: `/${city.slug}/${category.slug}` },
         ])}
+      />
+      <JsonLd
+        data={generateItemListJsonLd(
+          listings,
+          city.name,
+          category.name,
+          city.slug,
+          category.slug
+        )}
+      />
+      <ExitIntentModal
+        categoryName={category.name}
+        cityName={city.name}
+        citySlug={city.slug}
+        categorySlug={category.slug}
       />
 
       <div className="container-main">
@@ -154,12 +170,10 @@ export default function CityCategoryPage({ params }: CategoryPageProps) {
 
           {/* Sidebar */}
           <aside className="space-y-6">
-            <div className="card p-5">
-              <ContactForm
-                citySlug={city.slug}
-                categorySlug={category.slug}
-              />
-            </div>
+            <QuoteRequestForm
+              defaultCity={city.slug}
+              defaultCategory={category.slug}
+            />
 
             <AdSlot position="sidebar" />
 
