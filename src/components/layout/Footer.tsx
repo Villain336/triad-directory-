@@ -140,6 +140,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/tools/cost-estimator" className="text-sm text-gray-600 hover:text-primary-600">
+                  Cost Estimator
+                </Link>
+              </li>
+              <li>
+                <Link href="/compare" className="text-sm text-gray-600 hover:text-primary-600">
+                  Compare Businesses
+                </Link>
+              </li>
+              <li>
                 <Link href="/advertise" className="text-sm text-gray-600 hover:text-primary-600">
                   Advertise
                 </Link>

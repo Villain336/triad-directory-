@@ -30,6 +30,17 @@ import ReviewSection from "@/components/listings/ReviewSection";
 import TrustBadges from "@/components/listings/TrustBadges";
 import OpenStatus from "@/components/listings/OpenStatus";
 import StickyCallBar from "@/components/lead-gen/StickyCallBar";
+import dynamic from "next/dynamic";
+import ListingGallery from "@/components/listings/ListingGallery";
+
+const ListingMap = dynamic(() => import("@/components/listings/ListingMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[300px] w-full rounded-xl bg-gray-100 animate-pulse flex items-center justify-center text-gray-400 text-sm">
+      Loading map...
+    </div>
+  ),
+});
 
 interface ListingPageProps {
   params: { city: string; category: string; slug: string };
@@ -282,6 +293,29 @@ export default function ListingPage({ params }: ListingPageProps) {
                     </span>
                   ))}
                 </div>
+              </section>
+            )}
+
+            {/* Photo Gallery (Premium) */}
+            {isPremium && (
+              <div className="mt-8">
+                <ListingGallery
+                  images={listing.galleryUrls || ["/placeholder-1.jpg", "/placeholder-2.jpg", "/placeholder-3.jpg", "/placeholder-4.jpg", "/placeholder-5.jpg", "/placeholder-6.jpg"]}
+                  businessName={listing.businessName}
+                />
+              </div>
+            )}
+
+            {/* Map */}
+            {listing.latitude && listing.longitude && (
+              <section className="mt-8">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Location</h3>
+                <ListingMap
+                  latitude={listing.latitude}
+                  longitude={listing.longitude}
+                  businessName={listing.businessName}
+                  address={`${listing.address}, ${listing.city}, ${listing.state} ${listing.zip}`}
+                />
               </section>
             )}
 

@@ -4,6 +4,7 @@ import { cities } from "@/lib/data/cities";
 import { categories } from "@/lib/data/categories";
 import { sampleListings } from "@/lib/data/sample-listings";
 import { sampleBlogPosts } from "@/lib/data/sample-blog";
+import { neighborhoods } from "@/lib/data/neighborhoods";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
@@ -16,6 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/advertise`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/pricing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/claim-listing`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE_URL}/tools/cost-estimator`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
+    { url: `${SITE_URL}/compare`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
   ];
 
   // City pages
@@ -63,6 +66,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
+  // Neighborhood pages
+  const neighborhoodPages: MetadataRoute.Sitemap = neighborhoods.map((n) => ({
+    url: `${SITE_URL}/${n.citySlug}/neighborhoods/${n.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
+
   return [
     ...staticPages,
     ...cityPages,
@@ -70,5 +81,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...categoryPages,
     ...listingPages,
     ...blogPages,
+    ...neighborhoodPages,
   ];
 }
