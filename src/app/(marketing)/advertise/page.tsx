@@ -12,6 +12,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo/metadata";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Advertise Your Business",
@@ -108,9 +109,11 @@ export default function AdvertisePage() {
                   Lead tracking & analytics dashboard
                 </li>
               </ul>
-              <Link href="/pricing" className="btn-accent w-full mt-6">
-                View Plans
-              </Link>
+              <CheckoutButton
+                tier="premium"
+                label="Start Premium — $99/mo"
+                className="w-full mt-6 rounded-lg bg-amber-500 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-600 transition-colors"
+              />
             </div>
 
             {/* Banner Ads */}
@@ -123,6 +126,7 @@ export default function AdvertisePage() {
                 High-visibility banner placements across the directory. Target
                 specific cities, categories, or run site-wide campaigns.
               </p>
+              <p className="mt-2 text-2xl font-bold text-gray-900">$149<span className="text-sm font-normal text-gray-500">/month</span></p>
               <ul className="mt-4 space-y-2 text-left text-sm">
                 <li className="flex items-start gap-2">
                   <CheckCircle className="h-4 w-4 mt-0.5 text-green-500 shrink-0" />
@@ -141,9 +145,11 @@ export default function AdvertisePage() {
                   Impression and click reporting
                 </li>
               </ul>
-              <Link href="/contact" className="btn-primary w-full mt-6">
-                Contact Sales
-              </Link>
+              <CheckoutButton
+                addon="bannerAd"
+                label="Start Banner Ad — $149/mo"
+                className="btn-primary w-full mt-6"
+              />
             </div>
 
             {/* Sponsored Content */}

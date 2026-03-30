@@ -23,22 +23,51 @@ export async function POST(request: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as any;
-      const { businessId, tier } = session.metadata;
+      const { businessId, tier, addon } = session.metadata;
 
-      // Create subscription record
-      await supabase.from("subscriptions").insert({
-        business_id: businessId,
-        stripe_customer_id: session.customer,
-        stripe_subscription_id: session.subscription,
-        tier,
-        status: "active",
-      });
+      if (addon === "featuredBoost") {
+        // Activate 7-day featured boost
+        const boostEnd = new Date();
+        boostEnd.setDate(boostEnd.getDate() + 7);
 
-      // Upgrade business tier
-      await supabase
-        .from("businesses")
-        .update({ tier, is_verified: true, is_featured: tier === "premium" || tier === "elite" })
-        .eq("id", businessId);
+        await supabase.from("boosts").insert({
+          business_id: businessId,
+          type: "featured",
+          starts_at: new Date().toISOString(),
+          ends_at: boostEnd.toISOString(),
+          stripe_session_id: session.id,
+          status: "active",
+        });
+
+        await supabase
+          .from("businesses")
+          .update({ is_featured: true })
+          .eq("id", businessId);
+      } else if (addon === "bannerAd") {
+        // Create banner ad record
+        await supabase.from("banner_ads").insert({
+          business_id: businessId,
+          stripe_customer_id: session.customer,
+          stripe_subscription_id: session.subscription,
+          status: "active",
+          starts_at: new Date().toISOString(),
+        });
+      } else if (tier) {
+        // Create subscription record
+        await supabase.from("subscriptions").insert({
+          business_id: businessId,
+          stripe_customer_id: session.customer,
+          stripe_subscription_id: session.subscription,
+          tier,
+          status: "active",
+        });
+
+        // Upgrade business tier
+        await supabase
+          .from("businesses")
+          .update({ tier, is_verified: true, is_featured: tier === "premium" || tier === "elite" })
+          .eq("id", businessId);
+      }
 
       break;
     }
@@ -79,6 +108,12 @@ export async function POST(request: NextRequest) {
           .update({ tier: "free", is_featured: false })
           .eq("id", sub.business_id);
       }
+
+      // Also cancel any banner ads tied to this subscription
+      await supabase
+        .from("banner_ads")
+        .update({ status: "canceled" })
+        .eq("stripe_subscription_id", subscription.id);
 
       break;
     }

@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { CheckCircle, X } from "lucide-react";
+import { CheckCircle, X, Zap } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import { generateFAQPageJsonLd } from "@/lib/seo/jsonld";
 import JsonLd from "@/components/seo/JsonLd";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Pricing - Listing Plans",
@@ -15,6 +16,7 @@ export const metadata: Metadata = generatePageMetadata({
 const plans = [
   {
     name: "Free",
+    tier: "free",
     price: "$0",
     period: "forever",
     description: "Basic listing to get started",
@@ -33,9 +35,11 @@ const plans = [
     cta: "Get Listed Free",
     href: "/claim-listing",
     popular: false,
+    checkout: false,
   },
   {
     name: "Basic",
+    tier: "basic",
     price: "$49",
     period: "/month",
     description: "Enhanced visibility for growing businesses",
@@ -52,11 +56,13 @@ const plans = [
       { text: "Sponsored blog mention", included: false },
     ],
     cta: "Start Basic",
-    href: "/contact",
+    href: null,
     popular: false,
+    checkout: true,
   },
   {
     name: "Premium",
+    tier: "premium",
     price: "$99",
     period: "/month",
     description: "Maximum visibility and lead generation",
@@ -73,11 +79,13 @@ const plans = [
       { text: "1 sponsored blog mention/quarter", included: true },
     ],
     cta: "Go Premium",
-    href: "/contact",
+    href: null,
     popular: true,
+    checkout: true,
   },
   {
     name: "Elite",
+    tier: "elite",
     price: "$199",
     period: "/month",
     description: "Dominate your market in the Triad",
@@ -93,9 +101,29 @@ const plans = [
       { text: "Multi-city listing", included: true },
       { text: "Competitor displacement", included: true },
     ],
-    cta: "Contact Sales",
-    href: "/contact",
+    cta: "Go Elite",
+    href: null,
     popular: false,
+    checkout: true,
+  },
+];
+
+const addons = [
+  {
+    name: "Featured Boost",
+    addon: "featuredBoost",
+    price: "$29",
+    period: "one-time",
+    description: "Boost your listing to the top of search results and homepage for 7 days.",
+    cta: "Buy Boost",
+  },
+  {
+    name: "Banner Ad",
+    addon: "bannerAd",
+    price: "$149",
+    period: "/month",
+    description: "Display banner ads across directory pages. Geo-targeted by city or category.",
+    cta: "Start Banner Ad",
   },
 ];
 
@@ -178,17 +206,59 @@ export default function PricingPage() {
               ))}
             </ul>
 
-            <Link
-              href={plan.href}
-              className={`mt-6 w-full text-center ${
-                plan.popular ? "btn-primary" : "btn-secondary"
-              }`}
-            >
-              {plan.cta}
-            </Link>
+            {plan.checkout ? (
+              <CheckoutButton
+                tier={plan.tier}
+                label={plan.cta}
+                className={`mt-6 w-full text-center rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
+                  plan.popular
+                    ? "bg-primary-600 text-white hover:bg-primary-700"
+                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                }`}
+              />
+            ) : (
+              <Link
+                href={plan.href!}
+                className={`mt-6 w-full text-center ${
+                  plan.popular ? "btn-primary" : "btn-secondary"
+                }`}
+              >
+                {plan.cta}
+              </Link>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Add-ons */}
+      <section className="mt-16">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
+            <Zap className="h-6 w-6 text-amber-500" />
+            Add-Ons &amp; Boosts
+          </h2>
+          <p className="mt-2 text-sm text-gray-500">
+            Supercharge any listing plan with these extras
+          </p>
+        </div>
+        <div className="mt-8 grid gap-6 md:grid-cols-2 max-w-2xl mx-auto">
+          {addons.map((item) => (
+            <div key={item.name} className="card p-6 flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900">{item.name}</h3>
+              <div className="mt-1">
+                <span className="text-2xl font-bold text-gray-900">{item.price}</span>
+                <span className="text-sm text-gray-500 ml-1">{item.period}</span>
+              </div>
+              <p className="mt-2 text-sm text-gray-600 flex-1">{item.description}</p>
+              <CheckoutButton
+                addon={item.addon}
+                label={item.cta}
+                className="mt-4 w-full rounded-lg bg-amber-500 px-4 py-3 text-sm font-semibold text-white hover:bg-amber-600 transition-colors"
+              />
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* FAQ */}
       <section className="mt-16 max-w-3xl mx-auto">

@@ -1,13 +1,32 @@
 import Stripe from "stripe";
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
-  apiVersion: "2024-12-18.acacia" as any,
+let _stripe: Stripe | null = null;
+
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+      apiVersion: "2024-12-18.acacia" as any,
+    });
+  }
+  return _stripe;
+}
+
+// Keep backwards compat export as getter
+export const stripe = new Proxy({} as Stripe, {
+  get(_, prop) {
+    return (getStripe() as any)[prop];
+  },
 });
 
 export const PRICE_IDS = {
-  basic: process.env.STRIPE_PRICE_BASIC || "price_basic",
-  premium: process.env.STRIPE_PRICE_PREMIUM || "price_premium",
-  elite: process.env.STRIPE_PRICE_ELITE || "price_elite",
+  basic: process.env.STRIPE_PRICE_BASIC || "price_1TGaF3R69hwQuKhC7UJGV8cM",
+  premium: process.env.STRIPE_PRICE_PREMIUM || "price_1TGaF4R69hwQuKhCCzhwnVYi",
+  elite: process.env.STRIPE_PRICE_ELITE || "price_1TGaF6R69hwQuKhCinRdL7IC",
+};
+
+export const ADDON_PRICE_IDS = {
+  featuredBoost: process.env.STRIPE_PRICE_BOOST || "price_1TGaF6R69hwQuKhCsdttErbF",
+  bannerAd: process.env.STRIPE_PRICE_BANNER || "price_1TGaF7R69hwQuKhCJtCpdEIE",
 };
 
 export function getTierFromPriceId(priceId: string): string {

@@ -10,8 +10,10 @@ import {
   Settings,
   Crown,
   ArrowUpRight,
+  Zap,
 } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo/metadata";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Business Dashboard",
@@ -85,10 +87,11 @@ export default function DashboardPage() {
             <Settings className="h-4 w-4" aria-hidden="true" />
             Edit Listing
           </Link>
-          <Link href="/pricing" className="btn-accent text-sm gap-1.5">
-            <Crown className="h-4 w-4" aria-hidden="true" />
-            Upgrade Plan
-          </Link>
+          <CheckoutButton
+            tier="premium"
+            label="Upgrade Plan"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600 transition-colors"
+          />
         </div>
       </div>
 
@@ -243,12 +246,18 @@ export default function DashboardPage() {
                 </div>
               ))}
             </div>
-            <Link
-              href="/pricing"
-              className="mt-4 block text-center text-sm text-primary-600 hover:text-primary-700 font-medium"
-            >
-              Upgrade to Premium for full analytics →
-            </Link>
+            <CheckoutButton
+              tier="premium"
+              label="Upgrade to Premium for full analytics →"
+              className="mt-4 block w-full text-center text-sm text-primary-600 hover:text-primary-700 font-medium"
+            />
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <CheckoutButton
+                addon="featuredBoost"
+                label="⚡ Boost Listing for 7 Days — $29"
+                className="w-full rounded-lg bg-amber-50 border border-amber-200 px-3 py-2 text-sm font-medium text-amber-700 hover:bg-amber-100 transition-colors"
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo/metadata";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Business Portal - Manage Your Listing",
@@ -36,10 +37,11 @@ export default function BusinessPortalPage() {
             Manage your listing, track leads, and grow your business
           </p>
         </div>
-        <Link href="/pricing" className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600 transition-colors">
-          <Crown className="h-4 w-4" />
-          Upgrade to Premium
-        </Link>
+        <CheckoutButton
+          tier="premium"
+          label="Upgrade to Premium — $99/mo"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white hover:bg-amber-600 transition-colors"
+        />
       </div>
 
       {/* Claim or Login */}

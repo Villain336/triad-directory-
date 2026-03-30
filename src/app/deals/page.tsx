@@ -4,6 +4,7 @@ import { Tag, Percent, Gift, Clock, Users } from "lucide-react";
 import { getActiveDeals } from "@/lib/data/deals";
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import AdSlot from "@/components/ads/AdSlot";
+import CheckoutButton from "@/components/CheckoutButton";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Local Deals & Promotions",
@@ -99,9 +100,11 @@ export default function DealsPage() {
                 Create exclusive deals to attract new customers. Premium members
                 can post unlimited promotions.
               </p>
-              <Link href="/pricing" className="btn-primary w-full mt-3 text-sm">
-                Get Premium
-              </Link>
+              <CheckoutButton
+                tier="premium"
+                label="Get Premium — $99/mo"
+                className="w-full mt-3 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-primary-700 transition-colors"
+              />
             </div>
             <AdSlot position="sidebar" />
             <AdSlot position="sidebar" />
