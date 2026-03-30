@@ -104,7 +104,7 @@ export default function ComparePage() {
                           {biz.businessName}
                         </Link>
                         {(biz.tier === "premium" || biz.tier === "elite") && (
-                          <span className="ml-1.5 inline-flex items-center gap-0.5 text-xs text-accent-700">
+                          <span className="ml-1.5 inline-flex items-center gap-0.5 text-xs text-amber-700">
                             <Crown className="h-3 w-3" aria-hidden="true" /> Premium
                           </span>
                         )}
@@ -126,7 +126,7 @@ export default function ComparePage() {
                 {selected.map((biz) => (
                   <td key={biz.id} className="p-3 border-b border-gray-100">
                     <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-accent-400 text-accent-400" aria-hidden="true" />
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden="true" />
                       <span className="font-semibold">{biz.rating}</span>
                       <span className="text-gray-500">({biz.reviewCount})</span>
                     </div>

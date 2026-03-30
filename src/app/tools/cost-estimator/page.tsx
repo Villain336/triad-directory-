@@ -50,7 +50,7 @@ export default function CostEstimatorPage() {
           </div>
           <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             How Much Do Services Cost in the{" "}
-            <span className="text-accent-400">Triad</span>?
+            <span className="text-amber-400">Triad</span>?
           </h1>
           <p className="mt-3 max-w-2xl text-primary-200 text-lg">
             Get real pricing data for home services, contractors, and trades in

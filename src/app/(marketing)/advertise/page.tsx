@@ -27,7 +27,7 @@ export default function AdvertisePage() {
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 text-white">
         <div className="container-main py-16 sm:py-20 text-center">
           <h1 className="text-4xl font-bold sm:text-5xl">
-            Grow Your Business with <span className="text-accent-400">Triad Directory</span>
+            Grow Your Business with <span className="text-amber-400">Triad Directory</span>
           </h1>
           <p className="mt-4 text-lg text-primary-200 max-w-2xl mx-auto">
             Get found by thousands of customers actively searching for services in
@@ -82,7 +82,7 @@ export default function AdvertisePage() {
           <div className="mt-12 grid gap-8 md:grid-cols-3">
             {/* Premium Listing */}
             <div className="card p-6 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-amber-100 text-amber-700">
                 <TrendingUp className="h-7 w-7" />
               </div>
               <h3 className="mt-4 text-xl font-bold text-gray-900">Premium Listings</h3>

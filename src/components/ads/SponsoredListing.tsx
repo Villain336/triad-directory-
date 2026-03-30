@@ -30,7 +30,7 @@ export default function SponsoredListing({ listing }: SponsoredListingProps) {
             </p>
           </div>
           <div className="flex items-center gap-1">
-            <Star className="h-4 w-4 fill-accent-400 text-accent-400" />
+            <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
             <span className="font-semibold">{listing.rating}</span>
           </div>
         </div>

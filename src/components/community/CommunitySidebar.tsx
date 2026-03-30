@@ -44,7 +44,7 @@ export default function CommunitySidebar() {
       {/* Top Contributors */}
       <div className="card p-5">
         <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-          <Award className="h-4 w-4 text-accent-600" aria-hidden="true" />
+          <Award className="h-4 w-4 text-amber-600" aria-hidden="true" />
           Top Contributors
         </h3>
         <ul className="mt-3 space-y-2.5">

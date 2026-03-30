@@ -256,7 +256,7 @@ export default function AskQuestionPage() {
         <aside className="space-y-6">
           <div className="card p-5">
             <h3 className="font-semibold text-gray-900 flex items-center gap-2">
-              <Lightbulb className="h-5 w-5 text-accent-500" aria-hidden="true" />
+              <Lightbulb className="h-5 w-5 text-amber-500" aria-hidden="true" />
               Tips for a Great Question
             </h3>
             <ul className="mt-3 space-y-2.5 text-sm text-gray-600">

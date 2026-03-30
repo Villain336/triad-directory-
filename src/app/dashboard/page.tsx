@@ -193,7 +193,7 @@ export default function DashboardPage() {
         <div className="space-y-6">
           <div className="card p-5">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
-              <Star className="h-5 w-5 text-accent-500" aria-hidden="true" />
+              <Star className="h-5 w-5 text-amber-500" aria-hidden="true" />
               Reviews Summary
             </h2>
             <div className="mt-4 text-center">
@@ -202,7 +202,7 @@ export default function DashboardPage() {
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className="h-4 w-4 fill-accent-400 text-accent-400"
+                    className="h-4 w-4 fill-amber-400 text-amber-400"
                     aria-hidden="true"
                   />
                 ))}

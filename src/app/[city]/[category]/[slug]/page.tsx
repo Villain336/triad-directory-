@@ -111,11 +111,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
           {/* Main Content */}
           <div className="lg:col-span-2">
             {/* Business Header */}
-            <div className={`rounded-xl p-6 ${isPremium ? "bg-accent-50 border border-accent-200" : "bg-gray-50 border border-gray-200"}`}>
+            <div className={`rounded-xl p-6 ${isPremium ? "bg-amber-50 border border-amber-200" : "bg-white border border-gray-200"}`}>
               <div className="flex items-start justify-between">
                 <div>
                   {isPremium && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-accent-100 px-3 py-1 text-xs font-semibold text-accent-800 mb-2">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800 mb-2">
                       <Crown className="h-3.5 w-3.5" /> Premium Business
                     </span>
                   )}
@@ -128,7 +128,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
                       {listing.city}, NC
                     </span>
                     <span className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-accent-400 text-accent-400" />
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
                       <strong>{listing.rating}</strong> ({listing.reviewCount} reviews)
                     </span>
                     {listing.isVerified && (
@@ -362,7 +362,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
           {/* Sidebar */}
           <aside className="space-y-6">
-            <div id="contact-form" className="card p-5 sticky top-20">
+            <div id="contact-form" className="card p-5">
               <ContactForm
                 listingId={listing.id}
                 listingName={listing.businessName}

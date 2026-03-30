@@ -40,7 +40,7 @@ export default function ReviewSection({
                 key={i}
                 className={`h-4 w-4 ${
                   i < Math.round(averageRating)
-                    ? "fill-accent-400 text-accent-400"
+                    ? "fill-amber-400 text-amber-400"
                     : "fill-gray-200 text-gray-200"
                 }`}
                 aria-hidden="true"
@@ -56,7 +56,7 @@ export default function ReviewSection({
               <span className="w-8 text-right text-gray-600">{dist.stars} ★</span>
               <div className="flex-1 h-2.5 rounded-full bg-gray-200 overflow-hidden">
                 <div
-                  className="h-full rounded-full bg-accent-400 transition-all"
+                  className="h-full rounded-full bg-amber-400 transition-all"
                   style={{ width: `${dist.percentage}%` }}
                 />
               </div>

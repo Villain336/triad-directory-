@@ -25,7 +25,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
                 key={i}
                 className={`h-3.5 w-3.5 ${
                   i < review.rating
-                    ? "fill-accent-400 text-accent-400"
+                    ? "fill-amber-400 text-amber-400"
                     : "fill-gray-200 text-gray-200"
                 }`}
                 aria-hidden="true"

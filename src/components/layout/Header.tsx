@@ -33,7 +33,7 @@ export default function Header() {
             </Link>
             <Link
               href="/claim-listing"
-              className="rounded bg-accent-500 px-3 py-1 text-xs font-semibold text-gray-900 hover:bg-accent-400 transition-colors"
+              className="rounded bg-amber-500 px-3 py-1 text-xs font-semibold text-gray-900 hover:bg-amber-400 transition-colors"
             >
               Claim Your Listing
             </Link>

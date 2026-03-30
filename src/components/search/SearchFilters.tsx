@@ -94,11 +94,11 @@ export default function SearchFilters({
               onClick={() => updateFilter("minRating", filters.minRating === rating ? 0 : rating)}
               className={`flex items-center gap-1 rounded-full px-3 py-1 text-xs font-medium border transition-colors ${
                 filters.minRating === rating
-                  ? "border-accent-400 bg-accent-50 text-accent-800"
+                  ? "border-amber-400 bg-amber-50 text-amber-800"
                   : "border-gray-200 bg-white text-gray-600 hover:border-gray-300"
               }`}
             >
-              <Star className="h-3 w-3 fill-accent-400 text-accent-400" aria-hidden="true" />
+              <Star className="h-3 w-3 fill-amber-400 text-amber-400" aria-hidden="true" />
               {rating}+
             </button>
           ))}

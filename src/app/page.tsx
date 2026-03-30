@@ -52,7 +52,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Find Trusted Service Pros Across{" "}
-              <span className="text-accent-400">North Carolina</span>
+              <span className="text-amber-400">North Carolina</span>
             </h1>
             <p className="mt-4 text-lg text-primary-200 sm:text-xl">
               NC&apos;s most comprehensive directory of service businesses, trades,
@@ -71,12 +71,12 @@ export default async function HomePage() {
                   type="text"
                   name="q"
                   placeholder="What do you need? (e.g., plumber, electrician, dentist)"
-                  className="w-full rounded-xl border-0 py-4 pl-12 pr-4 text-gray-900 shadow-lg placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-accent-400"
+                  className="w-full rounded-xl border-0 py-4 pl-12 pr-4 text-gray-900 shadow-lg placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-400"
                 />
               </div>
               <button
                 type="submit"
-                className="rounded-xl bg-accent-500 px-8 py-4 font-semibold text-gray-900 shadow-lg transition hover:bg-accent-400"
+                className="rounded-xl bg-amber-500 px-8 py-4 font-semibold text-gray-900 shadow-lg transition hover:bg-amber-400"
               >
                 Search
               </button>
@@ -109,7 +109,7 @@ export default async function HomePage() {
               <span className="text-xs text-gray-500">Licensed & insured</span>
             </div>
             <div className="flex flex-col items-center gap-1.5">
-              <Star className="h-6 w-6 text-accent-500" />
+              <Star className="h-6 w-6 text-amber-500" />
               <span className="text-sm font-semibold text-gray-900">Real Reviews</span>
               <span className="text-xs text-gray-500">Honest ratings</span>
             </div>
@@ -261,7 +261,7 @@ export default async function HomePage() {
                       key={i}
                       className={`h-3.5 w-3.5 ${
                         i < review.rating
-                          ? "fill-accent-400 text-accent-400"
+                          ? "fill-amber-400 text-amber-400"
                           : "fill-gray-200 text-gray-200"
                       }`}
                       aria-hidden="true"

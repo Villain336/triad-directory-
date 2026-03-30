@@ -59,7 +59,7 @@ export default function EmergencyPage() {
       <section className="bg-primary-700 text-white">
         <div className="container-main py-10 sm:py-14">
           <div className="flex items-center gap-2 text-primary-200 text-sm mb-2">
-            <AlertTriangle className="h-5 w-5 text-accent-400" aria-hidden="true" />
+            <AlertTriangle className="h-5 w-5 text-amber-400" aria-hidden="true" />
             Available Now
           </div>
           <h1 className="text-3xl font-bold sm:text-4xl">
