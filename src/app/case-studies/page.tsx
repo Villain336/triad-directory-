@@ -30,7 +30,7 @@ const studies = [
   {
     slug: "atlas-parking-lot",
     business: "Atlas Parking Lot Solutions",
-    city: "Raleigh & Greensboro, NC",
+    city: "Greensboro, NC",
     category: "Paving & Striping",
     heroStat: "2 Markets",
     heroLabel: "Triad + Triangle Coverage",
@@ -124,14 +124,15 @@ export default function CaseStudiesPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-12 rounded-xl bg-gray-900 p-8 text-center text-white">
+        <div className="mt-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 p-8 text-center text-white">
+          <img src="/launchabl-logo.png" alt="Launchabl" className="h-8 w-auto mx-auto mb-3" />
           <h2 className="text-2xl font-bold">Want Results Like These?</h2>
-          <p className="mt-2 text-gray-300 max-w-lg mx-auto">
+          <p className="mt-2 text-orange-100 max-w-lg mx-auto">
             We help NC service businesses get found online, generate leads, and grow revenue.
             Free consultation — no strings attached.
           </p>
           <div className="mt-6 flex gap-3 justify-center">
-            <a href="https://launchabl.io" target="_blank" rel="noopener noreferrer" className="btn-accent gap-1.5">
+            <a href="https://launchabl.io" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors gap-1.5">
               Book Free Consultation <ArrowRight className="h-4 w-4" />
             </a>
             <Link href="/marketing" className="btn-secondary text-white border-white/20 hover:bg-white/10">

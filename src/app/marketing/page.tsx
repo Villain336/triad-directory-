@@ -62,7 +62,7 @@ const caseStudies = [
   },
   {
     business: "Atlas Parking Lot Solutions",
-    city: "Raleigh & Greensboro",
+    city: "Greensboro",
     category: "Paving & Striping",
     result: "Multi-city presence with premium listings across the Triad and Triangle",
     metric: "2",
@@ -87,13 +87,13 @@ export default function MarketingPage() {
       <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         <div className="container-main py-16 sm:py-20">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 rounded-full bg-primary-600/20 px-4 py-1.5 text-sm text-primary-300 border border-primary-500/30 mb-4">
-              <Zap className="h-4 w-4" aria-hidden="true" />
+            <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/20 px-4 py-1.5 text-sm text-orange-300 border border-orange-500/30 mb-4">
+              <img src="/launchabl-logo.png" alt="Launchabl" className="h-5 w-auto" />
               Powered by Launchabl
             </div>
             <h1 className="text-4xl font-bold sm:text-5xl">
               Stop Waiting for the Phone to Ring.{" "}
-              <span className="text-primary-400">Make It Ring.</span>
+              <span className="text-orange-400">Make It Ring.</span>
             </h1>
             <p className="mt-4 text-lg text-gray-300 max-w-2xl">
               We build websites, run SEO campaigns, and manage ads for NC service
@@ -105,8 +105,9 @@ export default function MarketingPage() {
                 href="https://launchabl.io"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-accent gap-2"
+                className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 transition-colors gap-2"
               >
+                <img src="/launchabl-logo.png" alt="" className="h-4 w-auto" />
                 Book Free Consultation <ArrowRight className="h-4 w-4" />
               </a>
               <Link href="/case-studies" className="btn-secondary text-white border-white/20 hover:bg-white/10">
@@ -248,10 +249,11 @@ export default function MarketingPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-primary-700 py-12 text-white text-center">
+      <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12 text-white text-center">
         <div className="container-main">
+          <img src="/launchabl-logo.png" alt="Launchabl" className="h-10 w-auto mx-auto mb-4" />
           <h2 className="text-3xl font-bold">Ready to Get More Customers?</h2>
-          <p className="mt-2 text-primary-200 max-w-xl mx-auto">
+          <p className="mt-2 text-orange-100 max-w-xl mx-auto">
             Book a free consultation. We&apos;ll show you exactly how to get your
             business in front of more NC customers.
           </p>
@@ -260,7 +262,7 @@ export default function MarketingPage() {
               href="https://launchabl.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-accent gap-2"
+              className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-orange-600 shadow-sm hover:bg-orange-50 transition-colors gap-2"
             >
               Book Free Consultation <ArrowRight className="h-4 w-4" />
             </a>
