@@ -28,7 +28,7 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/auth/login" className="hover:text-white transition-colors">
+            <Link href="/business-portal" className="hover:text-white transition-colors">
               Business Portal
             </Link>
             <Link

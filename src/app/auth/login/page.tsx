@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { LogIn, Mail, Lock, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/business-portal";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
@@ -47,7 +49,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/business-portal");
+    router.push(redirectTo);
     router.refresh();
   }
 
