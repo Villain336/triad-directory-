@@ -35,7 +35,7 @@ const studies = [
     heroStat: "2 Markets",
     heroLabel: "Triad + Triangle Coverage",
     challenge: "Needed online visibility across both the Triad and Triangle regions to serve commercial clients statewide.",
-    solution: "Multi-city premium listings, professional website at atlasparkinglotcare.com, and targeted content strategy.",
+    solution: "Multi-city premium listings, professional website at atlaslotcare.com, and targeted content strategy.",
     results: [
       "Premium listings in both Raleigh and Greensboro markets",
       "Professional website showcasing services and projects",
