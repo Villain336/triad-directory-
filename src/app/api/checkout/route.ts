@@ -7,21 +7,34 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { tier, businessId, email, addon } = body;
 
-    // Handle add-on purchases (boost, banner ad)
+    // Handle add-on purchases (boost, banner ad, lead packs)
     if (addon) {
       const addonPriceId = ADDON_PRICE_IDS[addon as keyof typeof ADDON_PRICE_IDS];
       if (!addonPriceId) {
         return NextResponse.json({ error: "Invalid add-on" }, { status: 400 });
       }
 
+      const leadPackMap: Record<string, number> = {
+        leadPack10: 10,
+        leadPack25: 25,
+        leadPack50: 50,
+      };
+
+      const isLeadPack = addon in leadPackMap;
       const isRecurring = addon === "bannerAd";
+
+      const credits = isLeadPack ? leadPackMap[addon] : undefined;
+      const successUrl = isLeadPack
+        ? `${SITE_URL}/dashboard?purchased=leads&credits=${credits}&session_id={CHECKOUT_SESSION_ID}`
+        : `${SITE_URL}/dashboard?purchased=${addon}&session_id={CHECKOUT_SESSION_ID}`;
+
       const session = await stripe.checkout.sessions.create({
         mode: isRecurring ? "subscription" : "payment",
         payment_method_types: ["card"],
         customer_email: email,
         line_items: [{ price: addonPriceId, quantity: 1 }],
         metadata: { businessId, addon },
-        success_url: `${SITE_URL}/dashboard?purchased=${addon}&session_id={CHECKOUT_SESSION_ID}`,
+        success_url: successUrl,
         cancel_url: `${SITE_URL}/pricing`,
       });
 

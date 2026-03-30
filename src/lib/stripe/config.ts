@@ -27,6 +27,9 @@ export const PRICE_IDS = {
 export const ADDON_PRICE_IDS = {
   featuredBoost: process.env.STRIPE_PRICE_BOOST || "price_1TGaF6R69hwQuKhCsdttErbF",
   bannerAd: process.env.STRIPE_PRICE_BANNER || "price_1TGaF7R69hwQuKhCJtCpdEIE",
+  leadPack10: process.env.STRIPE_PRICE_LEAD_10 || "price_1TGaWuR69hwQuKhC5uAx3cGs",
+  leadPack25: process.env.STRIPE_PRICE_LEAD_25 || "price_1TGaWvR69hwQuKhCMQyjmSax",
+  leadPack50: process.env.STRIPE_PRICE_LEAD_50 || "price_1TGaWvR69hwQuKhCtnzljUNe",
 };
 
 export function getTierFromPriceId(priceId: string): string {

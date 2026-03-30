@@ -52,6 +52,48 @@ export async function POST(request: NextRequest) {
           status: "active",
           starts_at: new Date().toISOString(),
         });
+      } else if (addon === "leadPack10" || addon === "leadPack25" || addon === "leadPack50") {
+        // Credit lead pack purchase
+        const leadPackCredits: Record<string, number> = {
+          leadPack10: 10,
+          leadPack25: 25,
+          leadPack50: 50,
+        };
+        const packSize = leadPackCredits[addon];
+        const amountPaid = session.amount_total ?? 0;
+
+        // Upsert lead_credits: increment total_purchased and balance
+        const { data: existing } = await supabase
+          .from("lead_credits")
+          .select("total_purchased, balance")
+          .eq("business_id", businessId)
+          .single();
+
+        if (existing) {
+          await supabase
+            .from("lead_credits")
+            .update({
+              total_purchased: existing.total_purchased + packSize,
+              balance: existing.balance + packSize,
+            })
+            .eq("business_id", businessId);
+        } else {
+          await supabase.from("lead_credits").insert({
+            business_id: businessId,
+            total_purchased: packSize,
+            total_used: 0,
+            balance: packSize,
+          });
+        }
+
+        // Record purchase history
+        await supabase.from("lead_credit_purchases").insert({
+          business_id: businessId,
+          pack_size: packSize,
+          amount_paid: amountPaid,
+          stripe_session_id: session.id,
+          purchased_at: new Date().toISOString(),
+        });
       } else if (tier) {
         // Create subscription record
         await supabase.from("subscriptions").insert({

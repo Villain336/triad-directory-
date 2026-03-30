@@ -13,7 +13,9 @@ import {
   Zap,
 } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo/metadata";
+import LeadCredits from "@/components/dashboard/LeadCredits";
 import CheckoutButton from "@/components/CheckoutButton";
+import LeadCredits from "@/components/dashboard/LeadCredits";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Business Dashboard",
@@ -213,6 +215,8 @@ export default function DashboardPage() {
               <p className="mt-1 text-sm text-gray-500">Based on 247 reviews</p>
             </div>
           </div>
+
+          <LeadCredits businessId="demo" />
 
           <div className="card p-5">
             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">

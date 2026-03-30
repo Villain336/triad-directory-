@@ -12,6 +12,7 @@ import {
   ArrowRight,
   HelpCircle,
   Briefcase,
+  Sparkles,
 } from "lucide-react";
 import { categories } from "@/lib/data/categories";
 import { cities } from "@/lib/data/cities";
@@ -74,6 +75,25 @@ export default function RequestServicePage() {
 
   return (
     <>
+      {/* Quote Marketplace Banner */}
+      <div className="bg-amber-50 border-b border-amber-200">
+        <div className="container-main py-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-sm">
+          <div className="flex items-center gap-2 text-amber-800">
+            <Sparkles className="h-4 w-4 shrink-0 text-amber-500" aria-hidden="true" />
+            <span>
+              <span className="font-semibold">New!</span> Try our Quote Marketplace — post your project and get competitive bids from local pros.
+            </span>
+          </div>
+          <Link
+            href="/quotes"
+            className="shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-1.5 text-sm font-semibold text-white hover:bg-amber-600 transition-colors"
+          >
+            Visit Quote Marketplace
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+      </div>
+
       {/* Hero */}
       <section className="bg-gradient-to-br from-primary-800 to-primary-900 text-white">
         <div className="container-main py-12 sm:py-16 text-center">
