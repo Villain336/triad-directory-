@@ -249,11 +249,11 @@ export default function MarketingPage() {
       </section>
 
       {/* CTA */}
-      <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12 text-white text-center">
+      <section className="py-12 text-center" style={{ backgroundColor: "#faf8f5" }}>
         <div className="container-main">
-          <img src="/IMG_2445.png" alt="Launchabl" className="h-10 w-auto mx-auto mb-4" />
-          <h2 className="text-3xl font-bold">Ready to Get More Customers?</h2>
-          <p className="mt-2 text-orange-100 max-w-xl mx-auto">
+          <img src="/IMG_2445.png" alt="Launchabl" className="h-16 w-auto mx-auto mb-4" />
+          <h2 className="text-3xl font-bold text-gray-900">Ready to Get More Customers?</h2>
+          <p className="mt-2 text-gray-600 max-w-xl mx-auto">
             Book a free consultation. We&apos;ll show you exactly how to get your
             business in front of more NC customers.
           </p>
@@ -262,11 +262,11 @@ export default function MarketingPage() {
               href="https://launchabl.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-orange-600 shadow-sm hover:bg-orange-50 transition-colors gap-2"
+              className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 transition-colors gap-2"
             >
               Book Free Consultation <ArrowRight className="h-4 w-4" />
             </a>
-            <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-white/30 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10">
+            <Link href="/pricing" className="inline-flex items-center justify-center rounded-lg border border-orange-300 px-6 py-3 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors">
               View Directory Pricing
             </Link>
           </div>

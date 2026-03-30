@@ -1,6 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight, TrendingUp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 interface AgencyCTAProps {
   variant?: "inline" | "banner" | "sidebar";
@@ -11,18 +10,18 @@ interface AgencyCTAProps {
 export default function AgencyCTA({ variant = "inline", cityName, categoryName }: AgencyCTAProps) {
   if (variant === "banner") {
     return (
-      <div className="rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 p-6 sm:p-8 text-white">
+      <div className="rounded-xl p-6 sm:p-8" style={{ backgroundColor: "#faf8f5" }}>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <img src="/IMG_2445.png" alt="Launchabl" className="h-8 w-auto" />
+          <div className="flex items-center gap-4">
+            <img src="/IMG_2445.png" alt="Launchabl" className="h-14 w-auto" />
             <div>
-              <h3 className="text-lg font-bold">Want Your Business at the Top?</h3>
-              <p className="mt-0.5 text-sm text-orange-100">
+              <h3 className="text-lg font-bold text-gray-900">Want Your Business at the Top?</h3>
+              <p className="mt-0.5 text-sm text-gray-600">
                 Websites, SEO, and ads for NC service businesses.
               </p>
             </div>
           </div>
-          <Link href="/marketing" className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-orange-600 shadow-sm hover:bg-orange-50 transition-colors gap-1.5 shrink-0">
+          <Link href="/marketing" className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 transition-colors gap-1.5 shrink-0">
             Learn More <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -32,14 +31,14 @@ export default function AgencyCTA({ variant = "inline", cityName, categoryName }
 
   if (variant === "sidebar") {
     return (
-      <div className="card overflow-hidden border-orange-200">
-        <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-5 text-white">
-          <img src="/IMG_2445.png" alt="Launchabl" className="h-7 w-auto" />
-          <h3 className="mt-3 font-bold">Grow Your Business</h3>
-          <p className="mt-1 text-sm text-orange-100">
+      <div className="rounded-xl overflow-hidden border border-orange-100" style={{ backgroundColor: "#faf8f5" }}>
+        <div className="p-5">
+          <img src="/IMG_2445.png" alt="Launchabl" className="h-14 w-auto" />
+          <h3 className="mt-3 font-bold text-gray-900">Grow Your Business</h3>
+          <p className="mt-1 text-sm text-gray-600">
             Get a premium listing, custom website, and SEO strategy.
           </p>
-          <Link href="/marketing" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors gap-1.5">
+          <Link href="/marketing" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-orange-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-orange-600 transition-colors gap-1.5">
             Get Started <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -49,10 +48,10 @@ export default function AgencyCTA({ variant = "inline", cityName, categoryName }
 
   // inline — bottom of service pages
   return (
-    <div className="rounded-xl border border-orange-200 bg-gradient-to-r from-orange-50 to-orange-100 p-5 sm:p-6">
+    <div className="rounded-xl border border-orange-100 p-5 sm:p-6" style={{ backgroundColor: "#faf8f5" }}>
       <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-        <div className="flex items-center gap-3 flex-1">
-          <img src="/IMG_2445.png" alt="Launchabl" className="h-8 w-auto shrink-0" />
+        <div className="flex items-center gap-4 flex-1">
+          <img src="/IMG_2445.png" alt="Launchabl" className="h-14 w-auto shrink-0" />
           <div>
             <h3 className="font-semibold text-gray-900">
               {categoryName && cityName
@@ -68,8 +67,7 @@ export default function AgencyCTA({ variant = "inline", cityName, categoryName }
           href="/marketing"
           className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 transition-colors gap-1.5 shrink-0"
         >
-          <img src="/IMG_2445.png" alt="" className="h-4 w-auto" />
-          Marketing Help
+          Marketing Help <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
     </div>

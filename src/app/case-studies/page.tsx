@@ -124,18 +124,18 @@ export default function CaseStudiesPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 p-8 text-center text-white">
-          <img src="/IMG_2445.png" alt="Launchabl" className="h-8 w-auto mx-auto mb-3" />
-          <h2 className="text-2xl font-bold">Want Results Like These?</h2>
-          <p className="mt-2 text-orange-100 max-w-lg mx-auto">
+        <div className="mt-12 rounded-xl p-8 text-center border border-orange-100" style={{ backgroundColor: "#faf8f5" }}>
+          <img src="/IMG_2445.png" alt="Launchabl" className="h-14 w-auto mx-auto mb-3" />
+          <h2 className="text-2xl font-bold text-gray-900">Want Results Like These?</h2>
+          <p className="mt-2 text-gray-600 max-w-lg mx-auto">
             We help NC service businesses get found online, generate leads, and grow revenue.
             Free consultation — no strings attached.
           </p>
           <div className="mt-6 flex gap-3 justify-center">
-            <a href="https://launchabl.io" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors gap-1.5">
+            <a href="https://launchabl.io" target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-6 py-3 text-sm font-semibold text-white hover:bg-orange-600 transition-colors gap-1.5">
               Book Free Consultation <ArrowRight className="h-4 w-4" />
             </a>
-            <Link href="/marketing" className="btn-secondary text-white border-white/20 hover:bg-white/10">
+            <Link href="/marketing" className="inline-flex items-center justify-center rounded-lg border border-orange-300 px-6 py-3 text-sm font-semibold text-orange-600 hover:bg-orange-50 transition-colors">
               View Services
             </Link>
           </div>
