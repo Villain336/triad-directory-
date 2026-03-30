@@ -88,7 +88,7 @@ export default function MarketingPage() {
         <div className="container-main py-16 sm:py-20">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-orange-500/20 px-4 py-1.5 text-sm text-orange-300 border border-orange-500/30 mb-4">
-              <img src="/launchabl-logo.png" alt="Launchabl" className="h-5 w-auto" />
+              <img src="/IMG_2445.png" alt="Launchabl" className="h-5 w-auto" />
               Powered by Launchabl
             </div>
             <h1 className="text-4xl font-bold sm:text-5xl">
@@ -107,7 +107,7 @@ export default function MarketingPage() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-orange-600 transition-colors gap-2"
               >
-                <img src="/launchabl-logo.png" alt="" className="h-4 w-auto" />
+                <img src="/IMG_2445.png" alt="" className="h-4 w-auto" />
                 Book Free Consultation <ArrowRight className="h-4 w-4" />
               </a>
               <Link href="/case-studies" className="btn-secondary text-white border-white/20 hover:bg-white/10">
@@ -251,7 +251,7 @@ export default function MarketingPage() {
       {/* CTA */}
       <section className="bg-gradient-to-r from-orange-500 to-orange-600 py-12 text-white text-center">
         <div className="container-main">
-          <img src="/launchabl-logo.png" alt="Launchabl" className="h-10 w-auto mx-auto mb-4" />
+          <img src="/IMG_2445.png" alt="Launchabl" className="h-10 w-auto mx-auto mb-4" />
           <h2 className="text-3xl font-bold">Ready to Get More Customers?</h2>
           <p className="mt-2 text-orange-100 max-w-xl mx-auto">
             Book a free consultation. We&apos;ll show you exactly how to get your

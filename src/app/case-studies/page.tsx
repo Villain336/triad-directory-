@@ -125,7 +125,7 @@ export default function CaseStudiesPage() {
 
         {/* CTA */}
         <div className="mt-12 rounded-xl bg-gradient-to-r from-orange-500 to-orange-600 p-8 text-center text-white">
-          <img src="/launchabl-logo.png" alt="Launchabl" className="h-8 w-auto mx-auto mb-3" />
+          <img src="/IMG_2445.png" alt="Launchabl" className="h-8 w-auto mx-auto mb-3" />
           <h2 className="text-2xl font-bold">Want Results Like These?</h2>
           <p className="mt-2 text-orange-100 max-w-lg mx-auto">
             We help NC service businesses get found online, generate leads, and grow revenue.
