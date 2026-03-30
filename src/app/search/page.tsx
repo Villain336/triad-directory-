@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { Search as SearchIcon } from "lucide-react";
-import { searchListings, sampleListings } from "@/lib/data/sample-listings";
+import { searchListings, getListings } from "@/lib/data/index";
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import ListingGrid from "@/components/listings/ListingGrid";
 import AdSlot from "@/components/ads/AdSlot";
@@ -13,7 +13,7 @@ export function generateMetadata({ searchParams }: SearchPageProps): Metadata {
   const query = searchParams.q || "";
   return generatePageMetadata({
     title: query ? `Search Results for "${query}"` : "Search Businesses",
-    description: `Search for local businesses and services in the Piedmont Triad. ${
+    description: `Search for local businesses and services across North Carolina. ${
       query ? `Results for "${query}".` : "Find plumbers, electricians, HVAC, and more."
     }`,
     path: `/search${query ? `?q=${encodeURIComponent(query)}` : ""}`,
@@ -21,9 +21,9 @@ export function generateMetadata({ searchParams }: SearchPageProps): Metadata {
   });
 }
 
-export default function SearchPage({ searchParams }: SearchPageProps) {
+export default async function SearchPage({ searchParams }: SearchPageProps) {
   const query = searchParams.q || "";
-  const results = query ? searchListings(query) : sampleListings;
+  const results = query ? await searchListings(query) : await getListings({ limit: 20 });
 
   return (
     <div className="container-main py-10">

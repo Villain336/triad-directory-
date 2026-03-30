@@ -16,8 +16,7 @@ import {
 } from "lucide-react";
 import { getCityBySlug } from "@/lib/data/cities";
 import { getCategoryBySlug } from "@/lib/data/categories";
-import { sampleListings, getListingsByCityAndCategory } from "@/lib/data/sample-listings";
-import { getReviewsByListingId } from "@/lib/data/sample-reviews";
+import { getListingBySlug, getListings, getReviewsByListingId } from "@/lib/data/index";
 import { getProjectsByListingId } from "@/lib/data/projects";
 import { generateListingMetadata } from "@/lib/seo/metadata";
 import { generateLocalBusinessJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
@@ -48,16 +47,11 @@ interface ListingPageProps {
   params: { city: string; category: string; slug: string };
 }
 
-export function generateStaticParams() {
-  return sampleListings.map((l) => ({
-    city: l.citySlug,
-    category: l.categorySlug,
-    slug: l.slug,
-  }));
-}
+export const revalidate = 3600;
+export const dynamicParams = true;
 
-export function generateMetadata({ params }: ListingPageProps): Metadata {
-  const listing = sampleListings.find((l) => l.slug === params.slug);
+export async function generateMetadata({ params }: ListingPageProps): Promise<Metadata> {
+  const listing = await getListingBySlug(params.slug);
   const city = getCityBySlug(params.city);
   const category = getCategoryBySlug(params.category);
   if (!listing || !city || !category) return {};
@@ -72,17 +66,18 @@ export function generateMetadata({ params }: ListingPageProps): Metadata {
   );
 }
 
-export default function ListingPage({ params }: ListingPageProps) {
-  const listing = sampleListings.find((l) => l.slug === params.slug);
+export default async function ListingPage({ params }: ListingPageProps) {
+  const listing = await getListingBySlug(params.slug);
   const city = getCityBySlug(params.city);
   const category = getCategoryBySlug(params.category);
   if (!listing || !city || !category) notFound();
 
   const isPremium = listing.tier === "premium" || listing.tier === "elite";
-  const reviews = getReviewsByListingId(listing.id);
+  const reviews = await getReviewsByListingId(listing.id);
   const projects = getProjectsByListingId(listing.id);
-  const relatedListings = getListingsByCityAndCategory(city.slug, category.slug)
-    .filter((l) => l.id !== listing.id)
+  const allListings = await getListings({ citySlug: city.slug, categorySlug: category.slug });
+  const relatedListings = allListings
+    .filter((l: any) => l.id !== listing.id)
     .slice(0, 2);
 
   return (
@@ -269,7 +264,7 @@ export default function ListingPage({ params }: ListingPageProps) {
                     Business Hours
                   </h3>
                   <dl className="mt-3 space-y-2 text-sm">
-                    {Object.entries(listing.hours).map(([day, hours]) => (
+                    {Object.entries(listing.hours as Record<string, string>).map(([day, hours]) => (
                       <div key={day} className="flex justify-between">
                         <dt className="font-medium text-gray-700 capitalize">
                           {day}
@@ -287,7 +282,7 @@ export default function ListingPage({ params }: ListingPageProps) {
               <section className="mt-8">
                 <h3 className="text-lg font-semibold text-gray-900">Services & Specialties</h3>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {listing.tags.map((tag) => (
+                  {(listing.tags as string[]).map((tag: string) => (
                     <span
                       key={tag}
                       className="rounded-full bg-primary-50 px-3 py-1 text-sm text-primary-700"

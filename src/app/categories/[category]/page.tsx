@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { MapPin, ArrowRight } from "lucide-react";
 import { categories, getCategoryBySlug } from "@/lib/data/categories";
 import { cities, getFeaturedCities } from "@/lib/data/cities";
-import { getListingsByCategory } from "@/lib/data/sample-listings";
+import { getListings } from "@/lib/data/index";
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import ListingGrid from "@/components/listings/ListingGrid";
@@ -28,11 +28,13 @@ export function generateMetadata({ params }: Props): Metadata {
   });
 }
 
-export default function CategoryAcrossCitiesPage({ params }: Props) {
+export const revalidate = 3600;
+
+export default async function CategoryAcrossCitiesPage({ params }: Props) {
   const category = getCategoryBySlug(params.category);
   if (!category) notFound();
 
-  const listings = getListingsByCategory(category.slug);
+  const listings = await getListings({ categorySlug: category.slug });
   const featuredCities = getFeaturedCities();
 
   return (

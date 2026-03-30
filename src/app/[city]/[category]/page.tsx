@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { MapPin, ArrowRight } from "lucide-react";
 import { cities, getCityBySlug } from "@/lib/data/cities";
 import { categories, getCategoryBySlug } from "@/lib/data/categories";
-import { getListingsByCityAndCategory } from "@/lib/data/sample-listings";
+import { getListings } from "@/lib/data/index";
 import { generateCityCategoryMetadata } from "@/lib/seo/metadata";
 import { generateBreadcrumbJsonLd, generateItemListJsonLd } from "@/lib/seo/jsonld";
 import JsonLd from "@/components/seo/JsonLd";
@@ -35,12 +35,14 @@ export function generateMetadata({ params }: CategoryPageProps): Metadata {
   return generateCityCategoryMetadata(city.name, city.slug, category.name, category.slug);
 }
 
-export default function CityCategoryPage({ params }: CategoryPageProps) {
+export const revalidate = 3600;
+
+export default async function CityCategoryPage({ params }: CategoryPageProps) {
   const city = getCityBySlug(params.city);
   const category = getCategoryBySlug(params.category);
   if (!city || !category) notFound();
 
-  const listings = getListingsByCityAndCategory(city.slug, category.slug);
+  const listings = await getListings({ citySlug: city.slug, categorySlug: category.slug });
 
   return (
     <>

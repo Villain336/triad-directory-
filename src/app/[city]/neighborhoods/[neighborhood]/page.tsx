@@ -5,7 +5,7 @@ import { MapPin, ArrowRight } from "lucide-react";
 import { cities, getCityBySlug } from "@/lib/data/cities";
 import { getFeaturedCategories } from "@/lib/data/categories";
 import { neighborhoods, getNeighborhoodsByCity } from "@/lib/data/neighborhoods";
-import { getListingsByCity } from "@/lib/data/sample-listings";
+import { getListings } from "@/lib/data/index";
 import { generatePageMetadata } from "@/lib/seo/metadata";
 import { generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
 import JsonLd from "@/components/seo/JsonLd";
@@ -39,14 +39,16 @@ export function generateMetadata({ params }: Props): Metadata {
   });
 }
 
-export default function NeighborhoodPage({ params }: Props) {
+export const revalidate = 3600;
+
+export default async function NeighborhoodPage({ params }: Props) {
   const city = getCityBySlug(params.city);
   const neighborhood = neighborhoods.find(
     (n) => n.citySlug === params.city && n.slug === params.neighborhood
   );
   if (!city || !neighborhood) notFound();
 
-  const listings = getListingsByCity(city.slug);
+  const listings = await getListings({ citySlug: city.slug });
   const featuredCategories = getFeaturedCategories();
   const otherNeighborhoods = getNeighborhoodsByCity(city.slug).filter(
     (n) => n.slug !== neighborhood.slug

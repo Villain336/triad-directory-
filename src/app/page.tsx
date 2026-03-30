@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { cities, getFeaturedCities } from "@/lib/data/cities";
 import { getFeaturedCategories } from "@/lib/data/categories";
-import { getFeaturedListings } from "@/lib/data/sample-listings";
+import { getListings } from "@/lib/data/index";
 import { sampleReviews } from "@/lib/data/sample-reviews";
 import { SITE_NAME, SITE_URL } from "@/lib/constants";
 import ListingCard from "@/components/listings/ListingCard";
@@ -36,10 +36,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
+export const revalidate = 3600; // Revalidate every hour
+
+export default async function HomePage() {
   const featuredCities = getFeaturedCities();
   const featuredCategories = getFeaturedCategories();
-  const featuredListings = getFeaturedListings().slice(0, 4);
+  const featuredListings = await getListings({ featured: true, limit: 4 });
 
   return (
     <>
