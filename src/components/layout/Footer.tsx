@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { MapPin } from "lucide-react";
 import { SITE_NAME, SUPPORT_EMAIL, PHONE } from "@/lib/constants";
+import Logo from "@/components/Logo";
 import { cities } from "@/lib/data/cities";
 import { getFeaturedCategories } from "@/lib/data/categories";
 
@@ -39,9 +39,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
           {/* About */}
           <div className="col-span-2 lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <MapPin className="h-6 w-6 text-primary-600" />
-              <span className="text-lg font-bold text-gray-900">{SITE_NAME}</span>
+            <Link href="/">
+              <Logo className="h-7 w-auto" />
             </Link>
             <p className="mt-3 text-sm text-gray-600">
               North Carolina&apos;s most comprehensive service business directory.

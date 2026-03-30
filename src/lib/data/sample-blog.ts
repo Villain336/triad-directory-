@@ -160,6 +160,277 @@ Before signing, make sure your contract includes:
     metaDescription:
       "Everything you need to know about hiring a licensed contractor in North Carolina. Tips for Triad homeowners on vetting, contracts, and permits.",
   },
+  {
+    slug: "best-pressure-washing-companies-raleigh",
+    title: "7 Best Pressure Washing Companies in Raleigh, NC (2025)",
+    excerpt: "Looking for reliable pressure washing in Raleigh? We've compiled the top-rated power washing and soft wash companies based on reviews, experience, and service quality.",
+    content: `Your Raleigh home's exterior takes a beating from NC's humid climate, pollen, and red clay. Professional pressure washing restores your property's curb appeal and prevents long-term damage from mold, mildew, and algae buildup.
+
+## What to Look for in a Raleigh Pressure Washing Company
+
+- **Soft wash capability**: Modern companies offer low-pressure soft washing for delicate surfaces like roofs, vinyl siding, and painted wood
+- **Insurance**: Verify at least $1M in liability coverage — pressure washing can cause damage if done improperly
+- **Reviews**: Check NC Service Businesses, Google, and the BBB for consistent ratings above 4.5 stars
+- **Environmental practices**: Ask about biodegradable cleaning solutions and water runoff management
+
+## Average Pressure Washing Costs in Raleigh
+
+- Driveway: $150-$300
+- Full house wash: $250-$500
+- Deck/patio: $150-$300
+- Roof soft wash: $300-$600
+- Commercial building: $500-$2,000+
+
+## When to Schedule
+
+The best time for pressure washing in Raleigh is spring (March-May) after pollen season peaks, or fall (September-October) before winter. Avoid freezing temperatures as water can damage surfaces when it expands.`,
+    author: "NC Service Businesses Team",
+    publishedAt: "2025-03-15",
+    tags: ["pressure-washing", "raleigh", "home-maintenance", "guide"],
+    citySlug: "raleigh",
+    categorySlug: "pressure-washing",
+    metaTitle: "7 Best Pressure Washing Companies in Raleigh NC (2025)",
+    metaDescription: "Find the best pressure washing companies in Raleigh, NC. Compare ratings, get free quotes from top-rated power washing and soft wash pros.",
+  },
+  {
+    slug: "parking-lot-striping-cost-nc",
+    title: "Parking Lot Striping Cost in NC: Complete Pricing Guide (2025)",
+    excerpt: "How much does parking lot striping cost in North Carolina? Breakdown of pricing for line marking, ADA compliance, and sealcoating across the Triad and Triangle.",
+    content: `Whether you manage a retail center, office building, church, or HOA, maintaining your parking lot striping is essential for safety, liability, and ADA compliance.
+
+## Parking Lot Striping Costs in NC
+
+### By Lot Size
+- Small lot (20-50 spaces): $400-$800
+- Medium lot (50-150 spaces): $800-$2,000
+- Large lot (150-500 spaces): $2,000-$5,000
+- Extra large (500+ spaces): $5,000-$12,000
+
+### By Service Type
+- Re-striping existing lines: $0.15-$0.25 per linear foot
+- New layout striping: $0.25-$0.50 per linear foot
+- Handicap spaces (with logo): $35-$75 each
+- Fire lane marking: $1.50-$3.00 per linear foot
+- Directional arrows: $25-$50 each
+- Speed bumps: $75-$150 each
+- Curb painting: $2-$5 per linear foot
+
+## ADA Compliance Requirements
+
+North Carolina follows federal ADA Standards. Key requirements:
+- 1-25 total spaces: 1 accessible space required
+- 26-50 spaces: 2 accessible spaces
+- 1 in every 6 accessible spaces must be van-accessible
+- Access aisles: minimum 5ft (8ft for van-accessible)
+- Signage mounted at minimum 60" height
+
+Non-compliance can result in fines of $75,000 for a first offense and $150,000 for subsequent violations.
+
+## How Often Should You Restripe?
+
+Most NC parking lots need restriping every 18-24 months. High-traffic lots may need annual restriping. Sealcoating extends the life of your striping and should be done every 2-3 years.`,
+    author: "NC Service Businesses Team",
+    publishedAt: "2025-02-20",
+    tags: ["paving", "striping", "parking-lot", "pricing", "ada-compliance"],
+    categorySlug: "paving-striping",
+    metaTitle: "Parking Lot Striping Cost in NC (2025) | Pricing Guide",
+    metaDescription: "How much does parking lot striping cost in North Carolina? Complete pricing guide for line marking, ADA compliance, and sealcoating across NC.",
+  },
+  {
+    slug: "when-repair-vs-replace-hvac-nc",
+    title: "HVAC Repair vs. Replace: How NC Homeowners Should Decide",
+    excerpt: "Is it worth repairing your HVAC system or time for a full replacement? Here's how to make the right call based on age, cost, and efficiency.",
+    content: `North Carolina's climate puts heavy demands on your HVAC system — hot, humid summers and cold winters mean your system runs 8-10 months out of the year. Knowing when to repair vs. replace can save you thousands.
+
+## The 50% Rule
+
+If a repair costs more than 50% of the value of a new system, replace it. Example: if a new system costs $6,000 and the repair quote is $3,500, it's time to replace.
+
+## The Age Factor
+
+- Under 10 years: Almost always repair (unless the repair exceeds 50% of replacement cost)
+- 10-15 years: Consider replacement if repairs are frequent or efficiency has dropped
+- 15+ years: Replace — newer systems are 30-50% more efficient
+
+## Signs It's Time to Replace
+
+1. **Rising energy bills**: If your Duke Energy or Piedmont Natural Gas bills are climbing despite normal usage
+2. **Frequent repairs**: More than 2 repair calls per year
+3. **Uneven temperatures**: Some rooms are hot while others are cold
+4. **R-22 refrigerant**: If your system uses R-22 (Freon), it's been phased out and replacement is the only long-term solution
+5. **Strange noises**: Banging, squealing, or grinding indicates worn components
+
+## NC-Specific Considerations
+
+- **Heat pumps**: Increasingly popular in NC. A heat pump replacement ($4,000-$8,000) can cut heating costs by 50% compared to a gas furnace
+- **SEER ratings**: NC building code requires minimum 15 SEER for new installations. Higher SEER = lower bills
+- **Rebates**: Duke Energy and Piedmont Natural Gas offer rebates up to $800 for high-efficiency replacements
+- **Humidity**: NC's humidity means your AC does double duty. Undersized systems run constantly without properly dehumidifying`,
+    author: "NC Service Businesses Team",
+    publishedAt: "2025-01-10",
+    tags: ["hvac", "home-maintenance", "repair", "guide", "energy-efficiency"],
+    categorySlug: "hvac",
+    metaTitle: "HVAC Repair vs Replace Guide for NC Homeowners | NC Service Businesses",
+    metaDescription: "Should you repair or replace your HVAC? NC-specific guide covering costs, age factors, heat pump options, and Duke Energy rebates.",
+  },
+  {
+    slug: "nc-contractor-license-check",
+    title: "How to Check if a Contractor is Licensed in North Carolina",
+    excerpt: "Don't hire an unlicensed contractor. Here's exactly how to verify contractor licenses, insurance, and credentials in NC.",
+    content: `Hiring an unlicensed contractor in North Carolina can leave you with shoddy work, no warranty, and no legal recourse. Here's how to protect yourself.
+
+## NC Licensing Requirements
+
+North Carolina requires a license for any construction project over $30,000. This includes:
+- General contractors
+- Plumbers
+- Electricians
+- HVAC technicians
+- Roofers (working under a GC license)
+
+## How to Verify a License
+
+### General Contractors
+- NC Licensing Board: nclbgc.org
+- Search by name, license number, or city
+- Verify license is "Active" status
+
+### Plumbers & HVAC
+- NC State Board of Examiners: ncbeec.org
+- Separate licenses for plumbing, heating, and fire sprinkler
+
+### Electricians
+- NC Board of Examiners of Electrical Contractors: ncbeec.org
+- Must hold a valid NC electrical license
+
+## Red Flags
+
+- No written contract or vague estimates
+- Asks for more than 1/3 upfront payment
+- No physical business address
+- Can't provide license number when asked
+- Pressures you for an immediate decision
+- Only accepts cash
+
+## What to Ask Before Hiring
+
+1. "What's your NC license number?" (Look it up yourself)
+2. "Can I see your certificate of insurance?"
+3. "Do you pull permits for this type of work?"
+4. "Can you provide 3 recent references in my area?"
+5. "What's your warranty on labor and materials?"`,
+    author: "NC Service Businesses Team",
+    publishedAt: "2025-02-05",
+    tags: ["contractors", "licensing", "guide", "north-carolina", "hiring-tips"],
+    categorySlug: "general-contractors",
+    metaTitle: "How to Check Contractor License in NC | NC Service Businesses",
+    metaDescription: "Verify NC contractor licenses online. Step-by-step guide to checking general contractor, plumber, electrician, and HVAC licenses in North Carolina.",
+  },
+  {
+    slug: "spring-home-maintenance-checklist-nc",
+    title: "Spring Home Maintenance Checklist for NC Homeowners (2025)",
+    excerpt: "Get your North Carolina home ready for spring and summer with this complete maintenance checklist covering HVAC, roof, gutters, landscaping, and more.",
+    content: `Spring in North Carolina means pollen, storms, and rising temperatures. Use this checklist to protect your home and avoid expensive emergency repairs.
+
+## HVAC (Do in March-April)
+- [ ] Schedule AC tune-up before summer ($75-$150)
+- [ ] Replace air filters (do this every 1-3 months)
+- [ ] Clean around outdoor condenser unit (remove leaves, debris)
+- [ ] Test thermostat and consider upgrading to smart thermostat
+- [ ] Check refrigerant levels (hire a pro for this)
+
+## Roof & Gutters (Do in March)
+- [ ] Inspect roof for winter storm damage
+- [ ] Clean gutters and downspouts
+- [ ] Check flashing around chimneys and vents
+- [ ] Look for missing or curled shingles
+- [ ] Trim branches hanging over the roof
+
+## Exterior (Do in April)
+- [ ] Pressure wash driveway, sidewalks, and siding
+- [ ] Inspect and repair caulking around windows and doors
+- [ ] Check deck for loose boards, popped nails, and rot
+- [ ] Touch up exterior paint where needed
+- [ ] Clean and inspect outdoor lighting
+
+## Plumbing (Do in March-April)
+- [ ] Check outdoor faucets and hose bibs for freeze damage
+- [ ] Inspect water heater for leaks or corrosion
+- [ ] Test sump pump if you have one
+- [ ] Clear slow drains before they become clogs
+- [ ] Check washing machine hoses for bulges
+
+## Landscaping (Do in April-May)
+- [ ] Aerate and overseed lawn
+- [ ] Apply pre-emergent weed control
+- [ ] Mulch flower beds (2-3 inches)
+- [ ] Prune shrubs and trees
+- [ ] Check irrigation system for leaks
+
+## Pest Control (Do in March)
+- [ ] Seal gaps around foundation, windows, and doors
+- [ ] Schedule termite inspection (critical in NC)
+- [ ] Remove standing water (mosquito prevention)
+- [ ] Check attic for signs of wildlife entry
+
+## Estimated Spring Maintenance Costs
+- DIY basics (filters, cleaning, sealing): $50-$100
+- AC tune-up: $75-$150
+- Gutter cleaning: $100-$250
+- Pressure washing (house + driveway): $300-$600
+- Lawn care startup: $100-$300
+- Total professional service: $600-$1,400`,
+    author: "NC Service Businesses Team",
+    publishedAt: "2025-03-01",
+    tags: ["home-maintenance", "spring", "checklist", "seasonal", "north-carolina"],
+    metaTitle: "Spring Home Maintenance Checklist for NC (2025) | NC Service Businesses",
+    metaDescription: "Complete spring maintenance checklist for North Carolina homeowners. HVAC, roof, gutters, pressure washing, landscaping — everything you need before summer.",
+  },
+  {
+    slug: "driveway-paving-cost-greensboro-raleigh",
+    title: "Driveway Paving Cost in Greensboro & Raleigh: What to Expect (2025)",
+    excerpt: "Planning a new driveway or resurfacing? Here's what asphalt and concrete driveways cost in the Greensboro and Raleigh areas of North Carolina.",
+    content: `A well-maintained driveway adds curb appeal and value to your NC home. Here's what to expect for costs in the Greensboro and Raleigh metro areas.
+
+## Asphalt Driveway Costs
+- New asphalt driveway: $3-$7 per sq ft
+- Standard 2-car driveway (600 sq ft): $2,500-$5,000
+- Large driveway (1,000 sq ft): $4,000-$8,000
+- Resurfacing (overlay): $2-$4 per sq ft
+- Sealcoating: $0.15-$0.30 per sq ft
+
+## Concrete Driveway Costs
+- Basic concrete: $6-$12 per sq ft
+- Stamped concrete: $10-$18 per sq ft
+- Standard 2-car driveway (600 sq ft): $4,500-$8,000
+- Exposed aggregate: $8-$14 per sq ft
+
+## Asphalt vs. Concrete: Which is Better for NC?
+
+### Asphalt Pros
+- Lower upfront cost (30-40% less than concrete)
+- Flexible — handles NC's freeze-thaw cycles better
+- Easy and cheap to repair
+- Can be resurfaced instead of replaced
+
+### Concrete Pros
+- Lasts 30-40 years vs. 15-20 for asphalt
+- Lower maintenance over lifetime
+- More design options (stamped, colored, exposed aggregate)
+- Handles heavy vehicles better
+
+### Our Recommendation for NC
+Asphalt is the better value for most NC driveways. The initial cost savings are significant, and NC's mild winters mean asphalt lasts longer here than in northern states. Budget for sealcoating every 2-3 years to maximize lifespan.
+
+## Cost Differences: Greensboro vs. Raleigh
+Pricing is similar across both markets. Raleigh tends to be 5-10% higher due to higher demand and labor costs in Wake County. Both areas have ample competition among paving companies, so always get 3+ quotes.`,
+    author: "NC Service Businesses Team",
+    publishedAt: "2025-01-25",
+    tags: ["paving", "driveway", "pricing", "greensboro", "raleigh", "asphalt", "concrete"],
+    categorySlug: "paving-striping",
+    metaTitle: "Driveway Paving Cost in Greensboro & Raleigh NC (2025)",
+    metaDescription: "How much does a new driveway cost in Greensboro and Raleigh? Asphalt vs concrete pricing, cost comparison, and tips for NC homeowners.",
+  },
 ];
 
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {

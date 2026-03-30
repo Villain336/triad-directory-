@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, X, Search, ChevronDown, MapPin, Phone } from "lucide-react";
+import { Menu, X, Search, ChevronDown, Phone } from "lucide-react";
 import { cities, getFeaturedCities } from "@/lib/data/cities";
 import { SITE_NAME, PHONE } from "@/lib/constants";
+import Logo from "@/components/Logo";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -45,14 +46,8 @@ export default function Header() {
         <div className="container-main">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              <MapPin className="h-8 w-8 text-primary-600" />
-              <div>
-                <span className="text-xl font-bold text-gray-900">{SITE_NAME}</span>
-                <span className="hidden sm:block text-xs text-gray-500">
-                  Triad • Triangle • Across NC
-                </span>
-              </div>
+            <Link href="/" className="flex items-center">
+              <Logo />
             </Link>
 
             {/* Desktop Search */}

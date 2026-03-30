@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import MobileNav from "@/components/layout/MobileNav";
 import JsonLd from "@/components/seo/JsonLd";
 import Analytics from "@/components/Analytics";
 import { defaultMetadata } from "@/lib/seo/metadata";
@@ -17,8 +18,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={generateOrganizationJsonLd()} />
         <JsonLd data={generateWebSiteJsonLd()} />
         <Header />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 pb-16 lg:pb-0">{children}</main>
         <Footer />
+        <MobileNav />
       </body>
     </html>
   );
