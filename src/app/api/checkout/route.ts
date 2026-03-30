@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe, PRICE_IDS, ADDON_PRICE_IDS } from "@/lib/stripe/config";
+import { getStripe, PRICE_IDS, ADDON_PRICE_IDS } from "@/lib/stripe/config";
 import { SITE_URL } from "@/lib/constants";
 
 export async function POST(request: NextRequest) {
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
         ? `${SITE_URL}/dashboard?purchased=leads&credits=${credits}&session_id={CHECKOUT_SESSION_ID}`
         : `${SITE_URL}/dashboard?purchased=${addon}&session_id={CHECKOUT_SESSION_ID}`;
 
-      const session = await stripe.checkout.sessions.create({
+      const session = await getStripe().checkout.sessions.create({
         mode: isRecurring ? "subscription" : "payment",
         payment_method_types: ["card"],
         customer_email: email,

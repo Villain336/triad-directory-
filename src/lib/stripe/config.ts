@@ -4,19 +4,12 @@ let _stripe: Stripe | null = null;
 
 export function getStripe(): Stripe {
   if (!_stripe) {
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-12-18.acacia" as any,
     });
   }
   return _stripe;
 }
-
-// Keep backwards compat export as getter
-export const stripe = new Proxy({} as Stripe, {
-  get(_, prop) {
-    return (getStripe() as any)[prop];
-  },
-});
 
 export const PRICE_IDS = {
   basic: process.env.STRIPE_PRICE_BASIC || "price_1TGaF3R69hwQuKhC7UJGV8cM",
