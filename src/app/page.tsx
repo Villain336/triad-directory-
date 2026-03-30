@@ -95,6 +95,19 @@ export default async function HomePage() {
                 </Link>
               ))}
             </div>
+
+            {/* Quick Access Links */}
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-xs text-primary-300">
+              <Link href="/emergency" className="hover:text-white">24/7 Emergency</Link>
+              <span>•</span>
+              <Link href="/tools/cost-estimator" className="hover:text-white">Cost Estimator</Link>
+              <span>•</span>
+              <Link href="/community" className="hover:text-white">Ask the Community</Link>
+              <span>•</span>
+              <Link href="/deals" className="hover:text-white">Local Deals</Link>
+              <span>•</span>
+              <Link href="/business-portal" className="hover:text-white">Business Owners</Link>
+            </div>
           </div>
         </div>
       </section>

@@ -173,6 +173,16 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
                     </li>
                   ))}
               </ul>
+
+              {/* Helpful Resources */}
+              <h3>Helpful Resources</h3>
+              <ul>
+                <li><Link href="/tools/cost-estimator">How much do {category.name.toLowerCase()} cost in NC?</Link></li>
+                <li><Link href="/community">Ask the community about {category.name.toLowerCase()}</Link></li>
+                <li><Link href={`/${city.slug}`}>All services in {city.name}</Link></li>
+                <li><Link href="/emergency">24/7 Emergency services</Link></li>
+                <li><Link href="/business-portal">Are you a {category.name.toLowerCase().replace(/s$/, "")}? Manage your listing</Link></li>
+              </ul>
             </section>
           </div>
 

@@ -176,6 +176,16 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   </a>
                 )}
               </div>
+
+              {/* Owner Link */}
+              <div className="mt-4 pt-4 border-t border-gray-200">
+                <Link
+                  href="/business-portal"
+                  className="text-xs text-gray-400 hover:text-primary-600 transition-colors"
+                >
+                  Is this your business? Manage your listing →
+                </Link>
+              </div>
             </div>
 
             {/* About */}

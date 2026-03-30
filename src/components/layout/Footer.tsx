@@ -202,6 +202,11 @@ export default function Footer() {
                   Claim Listing
                 </Link>
               </li>
+              <li>
+                <Link href="/business-portal" className="text-sm text-gray-600 hover:text-primary-600">
+                  Business Portal
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

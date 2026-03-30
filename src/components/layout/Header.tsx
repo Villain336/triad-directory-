@@ -28,12 +28,12 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/advertise" className="hover:text-accent-300 transition-colors">
-              Advertise With Us
+            <Link href="/business-portal" className="hover:text-white transition-colors">
+              Business Portal
             </Link>
             <Link
-              href="/claim-listing"
-              className="rounded bg-amber-500 px-3 py-1 text-xs font-semibold text-gray-900 hover:bg-amber-400 transition-colors"
+              href="/business-portal"
+              className="rounded bg-amber-500 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-600 transition-colors"
             >
               Claim Your Listing
             </Link>
