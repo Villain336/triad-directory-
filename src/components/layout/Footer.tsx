@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SITE_NAME, SUPPORT_EMAIL, PHONE } from "@/lib/constants";
 import Logo from "@/components/Logo";
+import AgencyFooter from "@/components/agency/AgencyFooter";
 import { cities } from "@/lib/data/cities";
 import { getFeaturedCategories } from "@/lib/data/categories";
 
@@ -174,6 +175,16 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/marketing" className="text-sm text-gray-600 hover:text-primary-600">
+                  Marketing Services
+                </Link>
+              </li>
+              <li>
+                <Link href="/case-studies" className="text-sm text-gray-600 hover:text-primary-600">
+                  Case Studies
+                </Link>
+              </li>
+              <li>
                 <Link href="/advertise" className="text-sm text-gray-600 hover:text-primary-600">
                   Advertise
                 </Link>
@@ -223,6 +234,7 @@ export default function Footer() {
               Terms of Service
             </Link>
           </div>
+          <AgencyFooter />
         </div>
       </div>
     </footer>

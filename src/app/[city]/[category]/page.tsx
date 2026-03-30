@@ -13,6 +13,7 @@ import ListingGrid from "@/components/listings/ListingGrid";
 import AdSlot from "@/components/ads/AdSlot";
 import QuoteRequestForm from "@/components/lead-gen/QuoteRequestForm";
 import ExitIntentModal from "@/components/lead-gen/ExitIntentModal";
+import AgencyCTA from "@/components/agency/AgencyCTA";
 
 interface CategoryPageProps {
   params: { city: string; category: string };
@@ -125,6 +126,11 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
               </div>
             )}
 
+            {/* Agency CTA */}
+            <div className="mt-8">
+              <AgencyCTA variant="inline" cityName={city.name} categoryName={category.name} />
+            </div>
+
             {/* SEO Content */}
             <section className="mt-12 prose prose-gray max-w-none">
               <h2>
@@ -202,7 +208,7 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
               </ul>
             </div>
 
-            <AdSlot position="sidebar" />
+            <AgencyCTA variant="sidebar" />
           </aside>
         </div>
       </div>
