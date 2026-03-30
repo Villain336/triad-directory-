@@ -21,6 +21,7 @@ import { getProjectsByListingId } from "@/lib/data/projects";
 import { generateListingMetadata } from "@/lib/seo/metadata";
 import { generateLocalBusinessJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
 import { formatPhone } from "@/lib/utils";
+import { createServerClient } from "@/lib/supabase/server";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import ListingCard from "@/components/listings/ListingCard";
@@ -33,6 +34,7 @@ import StickyCallBar from "@/components/lead-gen/StickyCallBar";
 import dynamic from "next/dynamic";
 import ListingGallery from "@/components/listings/ListingGallery";
 import ProjectShowcase from "@/components/listings/ProjectShowcase";
+import ProfileBoosters from "@/components/listings/ProfileBoosters";
 
 const ListingMap = dynamic(() => import("@/components/listings/ListingMap"), {
   ssr: false,
@@ -75,6 +77,14 @@ export default async function ListingPage({ params }: ListingPageProps) {
   const isPremium = listing.tier === "premium" || listing.tier === "elite";
   const reviews = await getReviewsByListingId(listing.id);
   const projects = getProjectsByListingId(listing.id);
+
+  // Fetch profile boosters from Supabase
+  const sb = createServerClient();
+  const { data: boosters } = await sb
+    .from("profile_boosters")
+    .select("*")
+    .eq("business_id", listing.id);
+
   const allListings = await getListings({ citySlug: city.slug, categorySlug: category.slug });
   const relatedListings = allListings
     .filter((l: any) => l.id !== listing.id)
@@ -327,6 +337,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
                   ))}
                 </div>
               </section>
+            )}
+
+            {/* Profile Boosters */}
+            {boosters && boosters.length > 0 && (
+              <ProfileBoosters boosters={boosters} businessName={listing.businessName} />
             )}
 
             {/* Photo Gallery (Premium) */}

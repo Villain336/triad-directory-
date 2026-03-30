@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import MobileNav from "@/components/layout/MobileNav";
 import JsonLd from "@/components/seo/JsonLd";
 import Analytics from "@/components/Analytics";
+import { RecaptchaScript } from "@/components/RecaptchaWrapper";
 import { defaultMetadata } from "@/lib/seo/metadata";
 import { generateOrganizationJsonLd, generateWebSiteJsonLd } from "@/lib/seo/jsonld";
 
@@ -15,6 +16,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className="flex min-h-screen flex-col font-sans antialiased">
         <Analytics />
+        <RecaptchaScript />
         <JsonLd data={generateOrganizationJsonLd()} />
         <JsonLd data={generateWebSiteJsonLd()} />
         <Header />
