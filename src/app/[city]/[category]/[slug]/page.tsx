@@ -169,10 +169,12 @@ export default async function ListingPage({ params }: ListingPageProps) {
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
-                <a href={`mailto:${listing.email}`} className="btn-secondary gap-2">
-                  <Mail className="h-4 w-4" />
-                  Email
-                </a>
+                {listing.email && (
+                  <a href={`mailto:${listing.email}`} className="btn-secondary gap-2">
+                    <Mail className="h-4 w-4" />
+                    Email
+                  </a>
+                )}
               </div>
             </div>
 
@@ -181,7 +183,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               <h2 className="text-xl font-bold text-gray-900">
                 About {listing.businessName}
               </h2>
-              <p className="mt-3 text-gray-600 leading-relaxed whitespace-pre-line">
+              <p className="mt-3 text-gray-700 leading-relaxed whitespace-pre-line">
                 {listing.description}
               </p>
             </section>
@@ -192,45 +194,68 @@ export default async function ListingPage({ params }: ListingPageProps) {
               <div className="card p-5">
                 <h3 className="font-semibold text-gray-900">Business Details</h3>
                 <dl className="mt-3 space-y-3 text-sm">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-4 w-4 mt-0.5 text-gray-400" />
-                    <div>
-                      <dt className="sr-only">Address</dt>
-                      <dd className="text-gray-600">
-                        {listing.address}
-                        <br />
-                        {listing.city}, {listing.state} {listing.zip}
-                      </dd>
+                  {listing.address && (
+                    <div className="flex items-start gap-2">
+                      <MapPin className="h-4 w-4 mt-0.5 text-gray-400" />
+                      <div>
+                        <dt className="sr-only">Address</dt>
+                        <dd className="text-gray-700">
+                          {listing.address}
+                          {listing.zip && <><br />{listing.city}, {listing.state} {listing.zip}</>}
+                        </dd>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-400" />
-                    <div>
-                      <dt className="sr-only">Phone</dt>
-                      <dd>
-                        <a
-                          href={`tel:${listing.phone}`}
-                          className="text-primary-600 hover:underline"
-                        >
-                          {formatPhone(listing.phone)}
-                        </a>
-                      </dd>
+                  )}
+                  {listing.phone && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4 text-gray-400" />
+                      <div>
+                        <dt className="sr-only">Phone</dt>
+                        <dd>
+                          <a
+                            href={`tel:${listing.phone}`}
+                            className="text-primary-600 hover:underline font-medium"
+                          >
+                            {formatPhone(listing.phone)}
+                          </a>
+                        </dd>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4 text-gray-400" />
-                    <div>
-                      <dt className="sr-only">Email</dt>
-                      <dd>
-                        <a
-                          href={`mailto:${listing.email}`}
-                          className="text-primary-600 hover:underline"
-                        >
-                          {listing.email}
-                        </a>
-                      </dd>
+                  )}
+                  {listing.email && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4 text-gray-400" />
+                      <div>
+                        <dt className="sr-only">Email</dt>
+                        <dd>
+                          <a
+                            href={`mailto:${listing.email}`}
+                            className="text-primary-600 hover:underline font-medium"
+                          >
+                            {listing.email}
+                          </a>
+                        </dd>
+                      </div>
                     </div>
-                  </div>
+                  )}
+                  {listing.website && (
+                    <div className="flex items-center gap-2">
+                      <Globe className="h-4 w-4 text-gray-400" />
+                      <div>
+                        <dt className="sr-only">Website</dt>
+                        <dd>
+                          <a
+                            href={listing.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary-600 hover:underline font-medium"
+                          >
+                            {listing.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                          </a>
+                        </dd>
+                      </div>
+                    </div>
+                  )}
                   {listing.yearEstablished && (
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-gray-400" />

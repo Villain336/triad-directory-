@@ -123,7 +123,7 @@ function mapBusinessToListing(biz: any) {
     longitude: biz.longitude,
     imageUrl: biz.image_url,
     galleryUrls: biz.gallery_urls,
-    hours: biz.hours,
+    hours: typeof biz.hours === "string" ? JSON.parse(biz.hours) : biz.hours,
     rating: Number(biz.rating) || 0,
     reviewCount: biz.review_count || 0,
     yearEstablished: biz.year_established,
