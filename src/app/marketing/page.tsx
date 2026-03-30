@@ -64,9 +64,9 @@ const caseStudies = [
     business: "Atlas Parking Lot Solutions",
     city: "Greensboro",
     category: "Paving & Striping",
-    result: "Multi-city presence with premium listings across the Triad and Triangle",
-    metric: "2",
-    metricLabel: "Markets Covered",
+    result: "Locally owned company now visible across 11+ NC cities for lot striping and maintenance",
+    metric: "11+",
+    metricLabel: "Cities Served",
     slug: "atlas-parking-lot",
   },
   {
