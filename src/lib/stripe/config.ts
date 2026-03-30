@@ -21,7 +21,6 @@ export const stripe = new Proxy({} as Stripe, {
 export const PRICE_IDS = {
   basic: process.env.STRIPE_PRICE_BASIC || "price_1TGaF3R69hwQuKhC7UJGV8cM",
   premium: process.env.STRIPE_PRICE_PREMIUM || "price_1TGaF4R69hwQuKhCCzhwnVYi",
-  elite: process.env.STRIPE_PRICE_ELITE || "price_1TGaF6R69hwQuKhCinRdL7IC",
 };
 
 export const ADDON_PRICE_IDS = {
@@ -35,6 +34,5 @@ export const ADDON_PRICE_IDS = {
 export function getTierFromPriceId(priceId: string): string {
   if (priceId === PRICE_IDS.basic) return "basic";
   if (priceId === PRICE_IDS.premium) return "premium";
-  if (priceId === PRICE_IDS.elite) return "elite";
   return "free";
 }

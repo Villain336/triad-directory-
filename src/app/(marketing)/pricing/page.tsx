@@ -9,7 +9,7 @@ import CheckoutButton from "@/components/CheckoutButton";
 export const metadata: Metadata = generatePageMetadata({
   title: "Pricing - Listing Plans",
   description:
-    "Choose the perfect listing plan for your business. Free, Basic, Premium, and Elite tiers available. Get more leads in the Piedmont Triad.",
+    "Choose the perfect listing plan for your business. Free, Basic, and Premium tiers available. Get more leads in the Piedmont Triad.",
   path: "/pricing",
 });
 
@@ -83,29 +83,6 @@ const plans = [
     popular: true,
     checkout: true,
   },
-  {
-    name: "Elite",
-    tier: "elite",
-    price: "$199",
-    period: "/month",
-    description: "Dominate your market in the Triad",
-    features: [
-      { text: "Everything in Premium", included: true },
-      { text: "Exclusive category placement", included: true },
-      { text: "Banner ad included ($150 value)", included: true },
-      { text: "Dedicated account manager", included: true },
-      { text: "Monthly performance reports", included: true },
-      { text: "Priority customer support", included: true },
-      { text: "Social media features", included: true },
-      { text: "Blog article feature/month", included: true },
-      { text: "Multi-city listing", included: true },
-      { text: "Competitor displacement", included: true },
-    ],
-    cta: "Go Elite",
-    href: null,
-    popular: false,
-    checkout: true,
-  },
 ];
 
 const addons = [
@@ -141,7 +118,7 @@ const faqs = [
   {
     question: "Can I list my business in multiple cities?",
     answer:
-      "Free and Basic plans include one city. Premium includes up to 3 cities. Elite includes unlimited city listings across the Triad.",
+      "Free and Basic plans include one city. Premium includes up to 3 cities across the Triad.",
   },
   {
     question: "Do you offer annual billing discounts?",
@@ -167,7 +144,7 @@ export default function PricingPage() {
         </p>
       </div>
 
-      <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-12 grid gap-6 md:grid-cols-3 max-w-4xl mx-auto">
         {plans.map((plan) => (
           <div
             key={plan.name}
