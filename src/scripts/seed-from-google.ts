@@ -125,7 +125,7 @@ async function searchGooglePlaces(query: string, lat: number, lng: number) {
       "Content-Type": "application/json",
       "X-Goog-Api-Key": GOOGLE_API_KEY,
       "X-Goog-FieldMask":
-        "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.location,places.id,places.businessStatus",
+        "places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.websiteUri,places.rating,places.userRatingCount,places.location,places.id,places.businessStatus,places.regularOpeningHours,places.editorialSummary,places.shortFormattedAddress,places.addressComponents",
     },
     body: JSON.stringify({
       textQuery: query,
@@ -202,11 +202,45 @@ async function main() {
           const phone = place.nationalPhoneNumber?.replace(/\D/g, "") ||
             place.internationalPhoneNumber?.replace(/\D/g, "") || null;
 
+          // Parse hours from Google Places
+          let hours: Record<string, string> | null = null;
+          if (place.regularOpeningHours?.weekdayDescriptions) {
+            hours = {};
+            const dayMap: Record<string, string> = {
+              Monday: "monday", Tuesday: "tuesday", Wednesday: "wednesday",
+              Thursday: "thursday", Friday: "friday", Saturday: "saturday", Sunday: "sunday",
+            };
+            for (const desc of place.regularOpeningHours.weekdayDescriptions) {
+              const parts = desc.split(": ");
+              if (parts.length === 2) {
+                const key = dayMap[parts[0]] || parts[0].toLowerCase();
+                hours[key] = parts[1] === "Closed" ? "Closed" : parts[1];
+              }
+            }
+          }
+
+          // Parse zip from address components
+          let zip: string | null = null;
+          if (place.addressComponents) {
+            const postal = place.addressComponents.find(
+              (c: any) => c.types?.includes("postal_code")
+            );
+            if (postal) zip = postal.shortText || postal.longText || null;
+          }
+
+          // Build description
+          const editorial = place.editorialSummary?.text || "";
+          const shortDesc = editorial || `${category.name} serving ${city.name}, NC and surrounding areas.`;
+          const fullDesc = editorial
+            ? `${editorial} ${name} is a ${category.name.toLowerCase()} serving ${city.name}, NC and the surrounding area. Contact us for professional service, free estimates, and quality workmanship.`
+            : `${name} provides professional ${category.name.toLowerCase()} services in ${city.name}, NC and surrounding areas. Trusted by local residents and businesses for quality workmanship and reliable service. Contact us today for a free estimate.`;
+
           try {
             const result = await supabaseInsert("businesses", {
               name,
               slug,
-              short_description: `${category.name} serving ${city.name}, NC and surrounding areas.`,
+              short_description: shortDesc.slice(0, 200),
+              description: fullDesc,
               city_id: city.id,
               category_id: category.id,
               phone,
@@ -214,10 +248,12 @@ async function main() {
               address: place.formattedAddress || null,
               city_name: city.name,
               state: "NC",
+              zip,
               latitude: place.location?.latitude || null,
               longitude: place.location?.longitude || null,
               rating: place.rating || 0,
               review_count: place.userRatingCount || 0,
+              hours: hours ? JSON.stringify(hours) : null,
               tier: "free",
               status: "active",
               is_verified: false,
