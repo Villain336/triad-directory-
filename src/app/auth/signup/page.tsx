@@ -61,7 +61,14 @@ function SignupForm() {
     // Auto-confirmed (no email verification) — redirect immediately
     if (data.session && data.user) {
       await ensureUserProfile({ ...data.user, role: accountType } as any);
-      window.location.href = redirectForRole;
+      if (redirectTo === "/") {
+        // No explicit redirect — do smart redirect by role
+        const res = await fetch("/api/auth/redirect");
+        const { url } = await res.json();
+        window.location.href = url;
+      } else {
+        window.location.href = redirectForRole;
+      }
       return;
     }
 

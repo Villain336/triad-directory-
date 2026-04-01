@@ -61,7 +61,14 @@ function LoginForm() {
     }
 
     // Hard redirect to ensure cookies are set properly
-    window.location.href = redirectTo;
+    if (redirectTo === "/") {
+      // No explicit redirect — do smart redirect by role
+      const res = await fetch("/api/auth/redirect");
+      const { url } = await res.json();
+      window.location.href = url;
+    } else {
+      window.location.href = redirectTo;
+    }
   }
 
   return (
