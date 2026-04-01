@@ -5,8 +5,8 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
 
-  // Only protect admin and business-portal edit routes
-  const protectedPaths = ["/admin", "/business-portal/edit", "/business-portal/leads", "/business-portal/analytics"];
+  // Protect admin and all business-portal routes
+  const protectedPaths = ["/admin", "/business-portal"];
   const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
 
   if (!isProtected) return response;
@@ -54,5 +54,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/business-portal/edit/:path*", "/business-portal/leads/:path*", "/business-portal/analytics/:path*"],
+  matcher: ["/admin/:path*", "/business-portal", "/business-portal/:path*"],
 };

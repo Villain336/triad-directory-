@@ -3,14 +3,12 @@ interface LogoProps {
   showText?: boolean;
 }
 
-export default function Logo({ className = "h-[72px] w-auto", showText = false }: LogoProps) {
+export default function Logo({ className = "h-24 w-auto", showText = false }: LogoProps) {
   return (
-    <div className="flex items-center gap-2">
-      <img
-        src="/ncsb-logo.png"
-        alt="NC Service Businesses"
-        className={className}
-      />
-    </div>
+    <img
+      src="/ncsb-logo.png"
+      alt="NC Service Businesses"
+      className={className}
+    />
   );
 }

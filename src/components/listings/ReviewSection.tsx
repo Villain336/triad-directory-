@@ -1,10 +1,15 @@
-import { Star } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Star, PenLine, ChevronUp } from "lucide-react";
 import { Review } from "@/lib/data/sample-reviews";
 import ReviewCard from "./ReviewCard";
+import WriteReviewForm from "./WriteReviewForm";
 
 interface ReviewSectionProps {
   reviews: Review[];
   businessName: string;
+  businessId: string;
   averageRating: number;
   totalCount: number;
 }
@@ -12,9 +17,12 @@ interface ReviewSectionProps {
 export default function ReviewSection({
   reviews,
   businessName,
+  businessId,
   averageRating,
   totalCount,
 }: ReviewSectionProps) {
+  const [showForm, setShowForm] = useState(false);
+
   const ratingDistribution = [5, 4, 3, 2, 1].map((stars) => ({
     stars,
     count: reviews.filter((r) => r.rating === stars).length,
@@ -26,9 +34,41 @@ export default function ReviewSection({
 
   return (
     <section>
-      <h2 className="text-xl font-bold text-gray-900">
-        Reviews for {businessName}
-      </h2>
+      {/* Heading row with Write a Review button */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <h2 className="text-xl font-bold text-gray-900">
+          Reviews for {businessName}
+        </h2>
+        <button
+          type="button"
+          onClick={() => setShowForm((prev) => !prev)}
+          className="flex items-center gap-1.5 rounded-lg border border-primary-600 bg-primary-50 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-100 transition-colors"
+          aria-expanded={showForm}
+        >
+          {showForm ? (
+            <>
+              <ChevronUp className="h-4 w-4" />
+              Hide Form
+            </>
+          ) : (
+            <>
+              <PenLine className="h-4 w-4" />
+              Write a Review
+            </>
+          )}
+        </button>
+      </div>
+
+      {/* Write Review Form */}
+      {showForm && (
+        <div className="mt-4">
+          <WriteReviewForm
+            businessId={businessId}
+            businessName={businessName}
+            onSuccess={() => setShowForm(false)}
+          />
+        </div>
+      )}
 
       {/* Rating Summary */}
       <div className="mt-4 flex flex-col sm:flex-row gap-6 rounded-xl bg-gray-50 border border-gray-200 p-5">

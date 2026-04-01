@@ -382,6 +382,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               <ReviewSection
                 reviews={reviews}
                 businessName={listing.businessName}
+                businessId={listing.id}
                 averageRating={listing.rating}
                 totalCount={listing.reviewCount}
               />

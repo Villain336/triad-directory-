@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe, getTierFromPriceId } from "@/lib/stripe/config";
+import { getStripe, getTierFromPriceId } from "@/lib/stripe/config";
 import { createServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
@@ -10,6 +10,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Missing signature" }, { status: 400 });
   }
 
+  const stripe = await getStripe();
   let event;
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET);
@@ -23,22 +24,93 @@ export async function POST(request: NextRequest) {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as any;
-      const { businessId, tier } = session.metadata;
+      const { businessId, tier, addon } = session.metadata;
 
-      // Create subscription record
-      await supabase.from("subscriptions").insert({
-        business_id: businessId,
-        stripe_customer_id: session.customer,
-        stripe_subscription_id: session.subscription,
-        tier,
-        status: "active",
-      });
+      if (addon === "featuredBoost") {
+        // Activate 7-day featured boost
+        const boostEnd = new Date();
+        boostEnd.setDate(boostEnd.getDate() + 7);
 
-      // Upgrade business tier
-      await supabase
-        .from("businesses")
-        .update({ tier, is_verified: true, is_featured: tier === "premium" || tier === "elite" })
-        .eq("id", businessId);
+        await supabase.from("boosts").insert({
+          business_id: businessId,
+          type: "featured",
+          starts_at: new Date().toISOString(),
+          ends_at: boostEnd.toISOString(),
+          stripe_session_id: session.id,
+          status: "active",
+        });
+
+        await supabase
+          .from("businesses")
+          .update({ is_featured: true })
+          .eq("id", businessId);
+      } else if (addon === "bannerAd") {
+        // Create banner ad record
+        await supabase.from("banner_ads").insert({
+          business_id: businessId,
+          stripe_customer_id: session.customer,
+          stripe_subscription_id: session.subscription,
+          status: "active",
+          starts_at: new Date().toISOString(),
+        });
+      } else if (addon === "leadPack10" || addon === "leadPack25" || addon === "leadPack50") {
+        // Credit lead pack purchase
+        const leadPackCredits: Record<string, number> = {
+          leadPack10: 10,
+          leadPack25: 25,
+          leadPack50: 50,
+        };
+        const packSize = leadPackCredits[addon];
+        const amountPaid = session.amount_total ?? 0;
+
+        // Upsert lead_credits: increment total_purchased and balance
+        const { data: existing } = await supabase
+          .from("lead_credits")
+          .select("total_purchased, balance")
+          .eq("business_id", businessId)
+          .single();
+
+        if (existing) {
+          await supabase
+            .from("lead_credits")
+            .update({
+              total_purchased: existing.total_purchased + packSize,
+              balance: existing.balance + packSize,
+            })
+            .eq("business_id", businessId);
+        } else {
+          await supabase.from("lead_credits").insert({
+            business_id: businessId,
+            total_purchased: packSize,
+            total_used: 0,
+            balance: packSize,
+          });
+        }
+
+        // Record purchase history
+        await supabase.from("lead_credit_purchases").insert({
+          business_id: businessId,
+          pack_size: packSize,
+          amount_paid: amountPaid,
+          stripe_session_id: session.id,
+          purchased_at: new Date().toISOString(),
+        });
+      } else if (tier) {
+        // Create subscription record
+        await supabase.from("subscriptions").insert({
+          business_id: businessId,
+          stripe_customer_id: session.customer,
+          stripe_subscription_id: session.subscription,
+          tier,
+          status: "active",
+        });
+
+        // Upgrade business tier
+        await supabase
+          .from("businesses")
+          .update({ tier, is_verified: true, is_featured: tier === "premium" || tier === "elite" })
+          .eq("id", businessId);
+      }
 
       break;
     }
@@ -79,6 +151,12 @@ export async function POST(request: NextRequest) {
           .update({ tier: "free", is_featured: false })
           .eq("id", sub.business_id);
       }
+
+      // Also cancel any banner ads tied to this subscription
+      await supabase
+        .from("banner_ads")
+        .update({ status: "canceled" })
+        .eq("stripe_subscription_id", subscription.id);
 
       break;
     }
