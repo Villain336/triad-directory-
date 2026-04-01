@@ -86,9 +86,14 @@ export default function Header() {
   }, []);
 
   async function handleSignOut() {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+    } catch {
+      // Force clear
+    }
     setAuthUser(null);
     setUserMenuOpen(false);
+    window.location.href = "/";
   }
 
   return (
