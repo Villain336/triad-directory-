@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Routes that require authentication
-  const authRequired = ["/business-portal", "/admin"];
+  const authRequired = ["/business-portal", "/admin", "/account"];
   const needsAuth = authRequired.some((path) => pathname === path || pathname.startsWith(path + "/"));
 
   if (!needsAuth) return response;
@@ -66,5 +66,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/business-portal", "/business-portal/:path*"],
+  matcher: ["/admin/:path*", "/business-portal", "/business-portal/:path*", "/account", "/account/:path*"],
 };

@@ -128,6 +128,10 @@ export default function Header() {
               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
               <LayoutDashboard className="h-4 w-4" /> Business Portal
             </Link>
+            <Link href="/account" onClick={() => setUserMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
+              <User className="h-4 w-4" /> My Account
+            </Link>
             <Link href={`/community/user/${authUser.id}`} onClick={() => setUserMenuOpen(false)}
               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
               <MessageCircle className="h-4 w-4" /> Community Profile
@@ -142,13 +146,17 @@ export default function Header() {
               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-amber-50 hover:text-amber-700">
               <Building className="h-4 w-4" /> My Business Portal
             </Link>
-            <Link href="/pricing" onClick={() => setUserMenuOpen(false)}
+            <Link href="/account" onClick={() => setUserMenuOpen(false)}
               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
-              <Star className="h-4 w-4" /> Upgrade Plan
+              <User className="h-4 w-4" /> My Account
             </Link>
             <Link href={`/community/user/${authUser.id}`} onClick={() => setUserMenuOpen(false)}
               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
               <MessageCircle className="h-4 w-4" /> Community Profile
+            </Link>
+            <Link href="/pricing" onClick={() => setUserMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
+              <Star className="h-4 w-4" /> Upgrade Plan
             </Link>
           </>
         )}
@@ -156,13 +164,13 @@ export default function Header() {
         {/* Regular user */}
         {role === "user" && (
           <>
+            <Link href="/account" onClick={() => setUserMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
+              <User className="h-4 w-4" /> My Account
+            </Link>
             <Link href={`/community/user/${authUser.id}`} onClick={() => setUserMenuOpen(false)}
               className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
-              <MessageCircle className="h-4 w-4" /> My Profile
-            </Link>
-            <Link href="/community" onClick={() => setUserMenuOpen(false)}
-              className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700">
-              <User className="h-4 w-4" /> Community
+              <MessageCircle className="h-4 w-4" /> Community Profile
             </Link>
             <Link href="/auth/upgrade" onClick={() => setUserMenuOpen(false)}
               className="flex items-center gap-2 px-3 py-2 text-sm text-amber-600 hover:bg-amber-50">
@@ -218,6 +226,10 @@ export default function Header() {
             <Building className="h-4 w-4 text-amber-500" /> Business Portal
           </Link>
         )}
+        <Link href="/account" onClick={() => setMobileOpen(false)}
+          className="flex items-center gap-2 py-1.5 text-sm font-medium text-gray-700">
+          <User className="h-4 w-4 text-gray-400" /> My Account
+        </Link>
         <Link href={`/community/user/${authUser.id}`} onClick={() => setMobileOpen(false)}
           className="flex items-center gap-2 py-1.5 text-sm font-medium text-gray-700">
           <MessageCircle className="h-4 w-4 text-gray-400" /> Community Profile
