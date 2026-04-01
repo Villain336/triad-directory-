@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { LogIn, Mail, Lock, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { ensureUserProfile } from "@/lib/auth/ensure-profile";
 
 function LoginForm() {
   const router = useRouter();
@@ -38,15 +39,25 @@ function LoginForm() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
 
-    const { error: authError } = await supabase.auth.signInWithPassword({
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (authError) {
-      setError(authError.message);
+      // Handle unconfirmed email gracefully
+      if (authError.message.includes("Email not confirmed")) {
+        setError("Please check your email and click the confirmation link first. Check your spam folder too.");
+      } else {
+        setError(authError.message);
+      }
       setLoading(false);
       return;
+    }
+
+    // Ensure user_profiles row exists
+    if (data.user) {
+      await ensureUserProfile(data.user);
     }
 
     router.push(redirectTo);

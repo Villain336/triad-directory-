@@ -139,10 +139,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
       // Auto-detect business ownership
       const { data: org } = await supabase
-        .from("organizations")
+        .from("businesses")
         .select("id, name")
         .eq("owner_id", user.id)
-        .eq("status", "active")
         .maybeSingle();
 
       if (org) {

@@ -67,14 +67,13 @@ export default function AnswerForm({ questionId, onAnswerPosted }: AnswerFormPro
       setUserAvatar(profile?.avatar_url || null);
 
       // Check if user owns a business
-      const { data: org } = await supabase
-        .from("organizations")
+      const { data: biz } = await supabase
+        .from("businesses")
         .select("name")
         .eq("owner_id", user.id)
-        .eq("status", "active")
         .maybeSingle();
 
-      if (org?.name) setUserBusiness(org.name);
+      if (biz?.name) setUserBusiness(biz.name);
 
       setAuthState("loggedIn");
     }
