@@ -1,16 +1,91 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Menu, X, Search, ChevronDown, Phone } from "lucide-react";
+import { Menu, X, Search, ChevronDown, Phone, User, LogOut, LayoutDashboard, MessageCircle } from "lucide-react";
 import { cities, getFeaturedCities } from "@/lib/data/cities";
-import { SITE_NAME, PHONE } from "@/lib/constants";
+import { PHONE } from "@/lib/constants";
 import Logo from "@/components/Logo";
+import { supabase } from "@/lib/supabase/client";
+
+interface AuthUser {
+  id: string;
+  name: string;
+  avatarUrl: string | null;
+}
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [citiesOpen, setCitiesOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [authUser, setAuthUser] = useState<AuthUser | null>(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const featuredCities = getFeaturedCities();
+
+  // Fetch auth state on mount
+  useEffect(() => {
+    async function checkAuth() {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("full_name, avatar_url")
+          .eq("id", user.id)
+          .maybeSingle();
+
+        setAuthUser({
+          id: user.id,
+          name: profile?.full_name || user.email?.split("@")[0] || "Account",
+          avatarUrl: profile?.avatar_url || null,
+        });
+      }
+
+      setAuthChecked(true);
+    }
+
+    checkAuth();
+
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      if (session?.user) {
+        const { data: profile } = await supabase
+          .from("user_profiles")
+          .select("full_name, avatar_url")
+          .eq("id", session.user.id)
+          .maybeSingle();
+
+        setAuthUser({
+          id: session.user.id,
+          name: profile?.full_name || session.user.email?.split("@")[0] || "Account",
+          avatarUrl: profile?.avatar_url || null,
+        });
+      } else {
+        setAuthUser(null);
+      }
+    });
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Close user menu on outside click
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    setAuthUser(null);
+    setUserMenuOpen(false);
+  }
 
   return (
     <>
@@ -28,15 +103,83 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/business-portal" className="hover:text-white transition-colors">
-              Business Portal
-            </Link>
-            <Link
-              href="/business-portal"
-              className="rounded bg-amber-500 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-600 transition-colors"
-            >
-              Claim Your Listing
-            </Link>
+            {authChecked ? (
+              authUser ? (
+                /* Logged-in: user avatar + dropdown */
+                <div className="relative" ref={userMenuRef}>
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 rounded-full bg-primary-700 px-2 py-1 hover:bg-primary-600 transition-colors"
+                    aria-label="User menu"
+                  >
+                    {authUser.avatarUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={authUser.avatarUrl}
+                        alt={authUser.name}
+                        className="h-6 w-6 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-6 w-6 rounded-full bg-primary-500 flex items-center justify-center">
+                        <User className="h-3.5 w-3.5 text-white" />
+                      </div>
+                    )}
+                    <span className="text-xs font-medium max-w-[100px] truncate">
+                      {authUser.name}
+                    </span>
+                    <ChevronDown className="h-3 w-3 opacity-70" />
+                  </button>
+
+                  {userMenuOpen && (
+                    <div className="absolute right-0 top-full mt-1.5 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-xl z-50">
+                      <div className="px-3 py-1.5 border-b border-gray-100">
+                        <p className="text-xs font-semibold text-gray-900 truncate">{authUser.name}</p>
+                      </div>
+                      <Link
+                        href="/business-portal"
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700"
+                      >
+                        <LayoutDashboard className="h-4 w-4" />
+                        My Portal
+                      </Link>
+                      <Link
+                        href={`/community/user/${authUser.id}`}
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        My Profile
+                      </Link>
+                      <hr className="my-1" />
+                      <button
+                        onClick={handleSignOut}
+                        className="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Logged-out: Sign In + Claim */
+                <>
+                  <Link href="/auth/login" className="hover:text-white transition-colors">
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/claim-listing"
+                    className="rounded bg-amber-500 px-3 py-1 text-xs font-semibold text-white hover:bg-amber-600 transition-colors"
+                  >
+                    Claim Your Listing
+                  </Link>
+                </>
+              )
+            ) : (
+              /* Loading state */
+              <div className="h-7 w-28 rounded-full bg-primary-700 animate-pulse" />
+            )}
           </div>
         </div>
       </div>
@@ -193,13 +336,57 @@ export default function Header() {
               >
                 Advertise With Us
               </Link>
-              <Link
-                href="/claim-listing"
-                onClick={() => setMobileOpen(false)}
-                className="btn-primary w-full text-center"
-              >
-                Claim Your Listing
-              </Link>
+              {authChecked && (
+                <>
+                  {authUser ? (
+                    <>
+                      <hr />
+                      <Link
+                        href="/business-portal"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-2 py-1.5 text-sm font-medium text-gray-700"
+                      >
+                        <LayoutDashboard className="h-4 w-4 text-gray-400" />
+                        My Portal
+                      </Link>
+                      <Link
+                        href={`/community/user/${authUser.id}`}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-2 py-1.5 text-sm font-medium text-gray-700"
+                      >
+                        <MessageCircle className="h-4 w-4 text-gray-400" />
+                        My Community Profile
+                      </Link>
+                      <button
+                        onClick={() => { handleSignOut(); setMobileOpen(false); }}
+                        className="flex items-center gap-2 py-1.5 text-sm font-medium text-red-600"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <hr />
+                      <Link
+                        href="/auth/login"
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-2 py-1.5 text-sm font-medium text-primary-600"
+                      >
+                        <User className="h-4 w-4" />
+                        Sign In
+                      </Link>
+                      <Link
+                        href="/claim-listing"
+                        onClick={() => setMobileOpen(false)}
+                        className="btn-primary w-full text-center"
+                      >
+                        Claim Your Listing
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </div>
         )}
