@@ -29,6 +29,8 @@ import { generatePageMetadata } from "@/lib/seo/metadata";
 import { getUser } from "@/lib/auth/session";
 import { createServerClient } from "@/lib/supabase/server";
 import CheckoutButton from "@/components/CheckoutButton";
+import OnboardingView from "@/components/portal/OnboardingView";
+import SignOutButton from "@/components/portal/SignOutButton";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Business Portal - Manage Your Listing",
@@ -116,7 +118,7 @@ export default async function BusinessPortalPage() {
 
   // No business linked yet — onboarding
   if (!business) {
-    return <OnboardingView userName={profile?.full_name || user.email || ""} />;
+    return <OnboardingView userName={profile?.full_name || user.email || ""} userId={user.id} />;
   }
 
   return (
@@ -160,6 +162,7 @@ export default async function BusinessPortalPage() {
           </div>
 
           <div className="flex flex-wrap gap-2">
+            <SignOutButton />
             <Link
               href="/business-portal/edit"
               className="btn-secondary text-sm gap-1.5"
@@ -540,59 +543,3 @@ export default async function BusinessPortalPage() {
   );
 }
 
-// ---------- Onboarding (no business linked) ----------
-function OnboardingView({ userName }: { userName: string }) {
-  return (
-    <div className="container-main py-12">
-      <div className="mx-auto max-w-2xl text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary-100">
-          <Shield className="h-8 w-8 text-primary-600" />
-        </div>
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">
-          Welcome{userName ? `, ${userName.split(" ")[0]}` : ""}!
-        </h1>
-        <p className="mt-2 text-gray-600">
-          Your account is set up. Now let&apos;s link it to your business listing.
-        </p>
-      </div>
-
-      <div className="mx-auto mt-10 max-w-lg">
-        {/* Search for business */}
-        <div className="rounded-xl border border-primary-200 bg-primary-50 p-6">
-          <h2 className="text-lg font-bold text-gray-900">Claim Your Business</h2>
-          <p className="mt-1 text-sm text-gray-600">
-            Search for your business below. Once verified, you&apos;ll get full access to your portal.
-          </p>
-          <form className="mt-4 flex flex-col sm:flex-row gap-3">
-            <input
-              type="text"
-              placeholder="Search for your business name..."
-              className="flex-1 rounded-lg border border-gray-300 px-4 py-3 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
-            />
-            <button type="submit" className="btn-primary shrink-0">Search</button>
-          </form>
-          <p className="mt-2 text-xs text-gray-400">
-            Can&apos;t find your business?{" "}
-            <Link href="/request-service" className="text-primary-600 hover:underline">Add it here</Link>
-          </p>
-        </div>
-
-        {/* Or choose a plan */}
-        <div className="mt-8 rounded-xl border border-gray-200 bg-white p-6 text-center">
-          <h3 className="font-semibold text-gray-900">Choose a Plan</h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Get started with a free listing or upgrade for premium features.
-          </p>
-          <div className="mt-4 flex gap-3 justify-center">
-            <Link href="/claim-listing" className="btn-secondary text-sm">
-              Free Listing
-            </Link>
-            <Link href="/pricing" className="btn-primary text-sm gap-1.5">
-              View Plans <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
