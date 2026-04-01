@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { UserPlus, Mail, Lock, User, AlertCircle, CheckCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/business-portal";
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,7 +21,7 @@ export default function SignupPage() {
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin + "/api/auth/callback",
+        redirectTo: `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
       },
     });
     if (oauthError) {
@@ -43,7 +45,7 @@ export default function SignupPage() {
       password,
       options: {
         data: { full_name: fullName },
-        emailRedirectTo: `${window.location.origin}/api/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
       },
     });
 
@@ -59,11 +61,40 @@ export default function SignupPage() {
   if (success) {
     return (
       <div className="container-main py-16 text-center">
-        <CheckCircle className="mx-auto h-12 w-12 text-green-500" />
-        <h1 className="mt-4 text-2xl font-bold text-gray-900">Check Your Email</h1>
-        <p className="mt-2 text-gray-600 max-w-md mx-auto">
-          We sent a confirmation link to your email. Click it to activate your account and start managing your listing.
-        </p>
+        <div className="mx-auto max-w-md">
+          <CheckCircle className="mx-auto h-16 w-16 text-green-500" />
+          <h1 className="mt-4 text-2xl font-bold text-gray-900">Check Your Email</h1>
+          <p className="mt-2 text-gray-600">
+            We sent a confirmation link to your email. Click it to activate your
+            account and access your business portal.
+          </p>
+          <div className="mt-6 rounded-xl bg-primary-50 border border-primary-200 p-4 text-left">
+            <h3 className="font-semibold text-primary-900 text-sm">What happens next?</h3>
+            <ol className="mt-2 space-y-2 text-sm text-primary-800">
+              <li className="flex gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-[10px] font-bold text-white">1</span>
+                Click the confirmation link in your email
+              </li>
+              <li className="flex gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-[10px] font-bold text-white">2</span>
+                You&apos;ll be redirected to your Business Portal
+              </li>
+              <li className="flex gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary-600 text-[10px] font-bold text-white">3</span>
+                Claim or create your business listing
+              </li>
+            </ol>
+          </div>
+          <p className="mt-4 text-sm text-gray-500">
+            Didn&apos;t receive it? Check your spam folder or{" "}
+            <button
+              onClick={() => setSuccess(false)}
+              className="text-primary-600 hover:underline font-medium"
+            >
+              try again
+            </button>
+          </p>
+        </div>
       </div>
     );
   }
@@ -145,9 +176,17 @@ export default function SignupPage() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/auth/login" className="text-primary-600 hover:underline font-medium">Sign in</Link>
+          <Link href={`/auth/login${redirectTo !== "/business-portal" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`} className="text-primary-600 hover:underline font-medium">Sign in</Link>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupForm />
+    </Suspense>
   );
 }

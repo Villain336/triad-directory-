@@ -20,7 +20,7 @@ function LoginForm() {
     const { error: oauthError } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin + "/api/auth/callback",
+        redirectTo: `${window.location.origin}/api/auth/callback?redirect=${encodeURIComponent(redirectTo)}`,
       },
     });
     if (oauthError) {
@@ -117,11 +117,14 @@ function LoginForm() {
           <button type="submit" disabled={loading} className="btn-primary w-full">
             {loading ? "Signing in..." : "Sign In"}
           </button>
+          <Link href="/auth/reset-password" className="block text-center text-sm text-gray-500 hover:text-primary-600">
+            Forgot your password?
+          </Link>
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href="/auth/signup" className="text-primary-600 hover:underline font-medium">Sign up</Link>
+          <Link href={`/auth/signup${redirectTo !== "/business-portal" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`} className="text-primary-600 hover:underline font-medium">Sign up</Link>
         </p>
       </div>
     </div>
