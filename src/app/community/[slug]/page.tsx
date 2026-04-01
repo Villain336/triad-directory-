@@ -100,17 +100,24 @@ export default function QuestionPage() {
       if (!user) return;
       // Try to fetch profile for name + business owner status
       const { data: profile } = await supabase
-        .from("profiles")
-        .select("display_name, is_business_owner, business_name")
+        .from("user_profiles")
+        .select("full_name")
         .eq("id", user.id)
-        .single();
+        .maybeSingle();
+
+      // Check if user owns a business
+      const { data: biz } = await supabase
+        .from("businesses")
+        .select("name")
+        .eq("owner_id", user.id)
+        .maybeSingle();
 
       setCurrentUser({
         id: user.id,
         email: user.email,
-        name: profile?.display_name ?? user.email?.split("@")[0],
-        isBusinessOwner: profile?.is_business_owner ?? false,
-        businessName: profile?.business_name ?? undefined,
+        name: profile?.full_name ?? user.email?.split("@")[0],
+        isBusinessOwner: !!biz,
+        businessName: biz?.name ?? undefined,
       });
     });
   }, []);

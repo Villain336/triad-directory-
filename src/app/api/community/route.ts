@@ -205,10 +205,9 @@ export async function POST(request: NextRequest) {
 
         // Check if user owns a business
         const { data: org } = await supabase
-          .from("organizations")
+          .from("businesses")
           .select("id, name")
           .eq("owner_id", user.id)
-          .eq("status", "active")
           .maybeSingle();
 
         if (org) {

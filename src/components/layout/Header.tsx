@@ -7,6 +7,7 @@ import { cities, getFeaturedCities } from "@/lib/data/cities";
 import { PHONE } from "@/lib/constants";
 import Logo from "@/components/Logo";
 import { supabase } from "@/lib/supabase/client";
+import { ensureUserProfile } from "@/lib/auth/ensure-profile";
 
 interface AuthUser {
   id: string;
@@ -29,6 +30,9 @@ export default function Header() {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (user) {
+        // Ensure profile exists (handles first-time login edge cases)
+        await ensureUserProfile(user);
+
         const { data: profile } = await supabase
           .from("user_profiles")
           .select("full_name, avatar_url")

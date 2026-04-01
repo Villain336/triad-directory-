@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserPlus, Mail, Lock, User, AlertCircle, CheckCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
+import { ensureUserProfile } from "@/lib/auth/ensure-profile";
 
 function SignupForm() {
   const router = useRouter();
@@ -40,7 +41,7 @@ function SignupForm() {
     const password = formData.get("password") as string;
     const fullName = formData.get("fullName") as string;
 
-    const { error: authError } = await supabase.auth.signUp({
+    const { data, error: authError } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -52,6 +53,15 @@ function SignupForm() {
     if (authError) {
       setError(authError.message);
       setLoading(false);
+      return;
+    }
+
+    // If user was auto-confirmed (no email verification required),
+    // create profile and redirect immediately
+    if (data.session && data.user) {
+      await ensureUserProfile(data.user);
+      router.push(redirectTo);
+      router.refresh();
       return;
     }
 

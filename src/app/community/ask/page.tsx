@@ -32,14 +32,14 @@ export default function AskQuestionPage() {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (user) {
         const { data: profile } = await supabase
-          .from("profiles")
-          .select("display_name")
+          .from("user_profiles")
+          .select("full_name")
           .eq("id", user.id)
-          .single();
+          .maybeSingle();
 
         setCurrentUser({
           id: user.id,
-          name: profile?.display_name ?? user.email?.split("@")[0] ?? "",
+          name: profile?.full_name ?? user.email?.split("@")[0] ?? "",
           email: user.email ?? "",
         });
       }
