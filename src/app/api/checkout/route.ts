@@ -28,7 +28,8 @@ export async function POST(request: NextRequest) {
         ? `${SITE_URL}/dashboard?purchased=leads&credits=${credits}&session_id={CHECKOUT_SESSION_ID}`
         : `${SITE_URL}/dashboard?purchased=${addon}&session_id={CHECKOUT_SESSION_ID}`;
 
-      const session = await getStripe().checkout.sessions.create({
+      const stripe = await getStripe();
+      const session = await stripe.checkout.sessions.create({
         mode: isRecurring ? "subscription" : "payment",
         payment_method_types: ["card"],
         customer_email: email,
@@ -47,6 +48,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
     }
 
+    const stripe = await getStripe();
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],

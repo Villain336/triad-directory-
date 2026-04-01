@@ -1,10 +1,11 @@
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 let _stripe: Stripe | null = null;
 
-export function getStripe(): Stripe {
+export async function getStripe(): Promise<Stripe> {
   if (!_stripe) {
-    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+    const { default: StripeSDK } = await import("stripe");
+    _stripe = new StripeSDK(process.env.STRIPE_SECRET_KEY!, {
       apiVersion: "2024-12-18.acacia" as any,
     });
   }
