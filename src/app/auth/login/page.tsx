@@ -2,15 +2,14 @@
 
 import { useState, Suspense } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { LogIn, Mail, Lock, AlertCircle } from "lucide-react";
 import { supabase } from "@/lib/supabase/client";
 import { ensureUserProfile } from "@/lib/auth/ensure-profile";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/business-portal";
+  const redirectTo = searchParams.get("redirect") || "/";
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
@@ -45,9 +44,10 @@ function LoginForm() {
     });
 
     if (authError) {
-      // Handle unconfirmed email gracefully
       if (authError.message.includes("Email not confirmed")) {
         setError("Please check your email and click the confirmation link first. Check your spam folder too.");
+      } else if (authError.message.includes("Invalid login credentials")) {
+        setError("Wrong email or password. Double-check and try again.");
       } else {
         setError(authError.message);
       }
@@ -55,13 +55,13 @@ function LoginForm() {
       return;
     }
 
-    // Ensure user_profiles row exists
+    // Ensure profile exists
     if (data.user) {
       await ensureUserProfile(data.user);
     }
 
-    router.push(redirectTo);
-    router.refresh();
+    // Hard redirect to ensure cookies are set properly
+    window.location.href = redirectTo;
   }
 
   return (
@@ -71,7 +71,7 @@ function LoginForm() {
           <LogIn className="mx-auto h-10 w-10 text-primary-600" />
           <h1 className="mt-4 text-2xl font-bold text-gray-900">Sign In</h1>
           <p className="mt-1 text-sm text-gray-600">
-            Manage your business listing on NC Service Businesses
+            Welcome back to NC Service Businesses
           </p>
         </div>
 
@@ -104,7 +104,7 @@ function LoginForm() {
             <div className="w-full border-t border-gray-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="bg-white px-3 text-gray-400">or</span>
+            <span className="bg-white px-3 text-gray-400">or sign in with email</span>
           </div>
         </div>
 
@@ -135,7 +135,12 @@ function LoginForm() {
 
         <p className="mt-4 text-center text-sm text-gray-600">
           Don&apos;t have an account?{" "}
-          <Link href={`/auth/signup${redirectTo !== "/business-portal" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`} className="text-primary-600 hover:underline font-medium">Sign up</Link>
+          <Link
+            href={`/auth/signup${redirectTo !== "/" ? `?redirect=${encodeURIComponent(redirectTo)}` : ""}`}
+            className="text-primary-600 hover:underline font-medium"
+          >
+            Sign up
+          </Link>
         </p>
       </div>
     </div>

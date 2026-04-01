@@ -5,11 +5,11 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const pathname = request.nextUrl.pathname;
 
-  // Protect admin and all business-portal routes
-  const protectedPaths = ["/admin", "/business-portal"];
-  const isProtected = protectedPaths.some((path) => pathname.startsWith(path));
+  // Routes that require authentication
+  const authRequired = ["/business-portal", "/admin"];
+  const needsAuth = authRequired.some((path) => pathname === path || pathname.startsWith(path + "/"));
 
-  if (!isProtected) return response;
+  if (!needsAuth) return response;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -31,22 +31,34 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser();
 
+  // Not logged in → redirect to login with return URL
   if (!user) {
     const loginUrl = new URL("/auth/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Admin routes require admin role
-  if (pathname.startsWith("/admin")) {
-    const { data: profile } = await supabase
-      .from("user_profiles")
-      .select("role")
-      .eq("id", user.id)
-      .single();
+  // Fetch role for protected routes
+  const { data: profile } = await supabase
+    .from("user_profiles")
+    .select("role")
+    .eq("id", user.id)
+    .single();
 
-    if (!profile || profile.role !== "admin") {
-      return NextResponse.redirect(new URL("/business-portal", request.url));
+  const role = profile?.role || "user";
+
+  // Admin routes — admin only
+  if (pathname.startsWith("/admin")) {
+    if (role !== "admin") {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  }
+
+  // Business portal — business_owner or admin
+  if (pathname.startsWith("/business-portal")) {
+    if (role !== "business_owner" && role !== "admin") {
+      // Casual user trying to access portal → upgrade prompt
+      return NextResponse.redirect(new URL("/auth/upgrade", request.url));
     }
   }
 
