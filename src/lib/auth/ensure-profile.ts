@@ -2,8 +2,7 @@ import { supabase } from "@/lib/supabase/client";
 
 /**
  * Ensures a user_profiles row exists for the given user.
- * Call this after any successful authentication (login, signup, OAuth).
- * Safe to call multiple times — does upsert.
+ * Uses insert with ON CONFLICT DO NOTHING to avoid RLS issues with upsert.
  */
 export async function ensureUserProfile(user: {
   id: string;
@@ -18,14 +17,17 @@ export async function ensureUserProfile(user: {
 
   const avatarUrl = user.user_metadata?.avatar_url || null;
 
-  await supabase.from("user_profiles").upsert(
-    {
-      id: user.id,
-      email: user.email || null,
-      full_name: fullName,
-      avatar_url: avatarUrl,
-      role: "business_owner",
-    },
-    { onConflict: "id", ignoreDuplicates: true }
-  );
+  // Try insert first (most common case - profile doesn't exist yet)
+  const { error } = await supabase.from("user_profiles").insert({
+    id: user.id,
+    email: user.email || null,
+    full_name: fullName,
+    avatar_url: avatarUrl,
+    role: "business_owner",
+  });
+
+  // 23505 = unique_violation = profile already exists, which is fine
+  if (error && error.code !== "23505") {
+    console.error("ensureUserProfile error:", error);
+  }
 }
