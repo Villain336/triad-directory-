@@ -4,36 +4,43 @@ import { createAuthClient } from "@/lib/auth/session";
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const redirectTo = requestUrl.searchParams.get("redirect") || "/business-portal";
+  const redirectTo = requestUrl.searchParams.get("redirect") || "/";
+  const role = requestUrl.searchParams.get("role") || "user";
 
   if (code) {
     const supabase = createAuthClient();
     const { data } = await supabase.auth.exchangeCodeForSession(code);
 
-    // Auto-create user_profiles row if it doesn't exist
+    // Create or update user_profiles row
     if (data?.user) {
-      const { data: existingProfile } = await supabase
+      const fullName =
+        data.user.user_metadata?.full_name ||
+        data.user.user_metadata?.name ||
+        data.user.email?.split("@")[0] ||
+        "";
+
+      const { data: existing } = await supabase
         .from("user_profiles")
         .select("id")
         .eq("id", data.user.id)
-        .single();
+        .maybeSingle();
 
-      if (!existingProfile) {
-        const fullName =
-          data.user.user_metadata?.full_name ||
-          data.user.user_metadata?.name ||
-          data.user.email?.split("@")[0] ||
-          "";
-
+      if (!existing) {
         await supabase.from("user_profiles").insert({
           id: data.user.id,
           email: data.user.email,
           full_name: fullName,
-          role: "business_owner",
+          avatar_url: data.user.user_metadata?.avatar_url || null,
+          role: role === "business_owner" ? "business_owner" : "user",
         });
       }
     }
   }
 
-  return NextResponse.redirect(new URL(redirectTo, request.url));
+  // Redirect business owners to portal, everyone else to their requested page
+  const finalRedirect = role === "business_owner" && redirectTo === "/"
+    ? "/business-portal"
+    : redirectTo;
+
+  return NextResponse.redirect(new URL(finalRedirect, request.url));
 }

@@ -13,6 +13,7 @@ interface AuthUser {
   id: string;
   name: string;
   avatarUrl: string | null;
+  role: string;
 }
 
 export default function Header() {
@@ -35,7 +36,7 @@ export default function Header() {
 
         const { data: profile } = await supabase
           .from("user_profiles")
-          .select("full_name, avatar_url")
+          .select("full_name, avatar_url, role")
           .eq("id", user.id)
           .maybeSingle();
 
@@ -43,6 +44,7 @@ export default function Header() {
           id: user.id,
           name: profile?.full_name || user.email?.split("@")[0] || "Account",
           avatarUrl: profile?.avatar_url || null,
+          role: profile?.role || "user",
         });
       }
 
@@ -55,7 +57,7 @@ export default function Header() {
       if (session?.user) {
         const { data: profile } = await supabase
           .from("user_profiles")
-          .select("full_name, avatar_url")
+          .select("full_name, avatar_url, role")
           .eq("id", session.user.id)
           .maybeSingle();
 
@@ -63,6 +65,7 @@ export default function Header() {
           id: session.user.id,
           name: profile?.full_name || session.user.email?.split("@")[0] || "Account",
           avatarUrl: profile?.avatar_url || null,
+          role: profile?.role || "user",
         });
       } else {
         setAuthUser(null);
@@ -143,22 +146,35 @@ export default function Header() {
                     <div className="absolute right-0 top-full mt-1.5 w-48 rounded-lg border border-gray-200 bg-white py-1 shadow-xl z-50">
                       <div className="px-3 py-1.5 border-b border-gray-100">
                         <p className="text-xs font-semibold text-gray-900 truncate">{authUser.name}</p>
+                        <p className="text-[10px] text-gray-400 capitalize">{authUser.role === "business_owner" ? "Business Owner" : authUser.role === "admin" ? "Admin" : "Member"}</p>
                       </div>
-                      <Link
-                        href="/business-portal"
-                        onClick={() => setUserMenuOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700"
-                      >
-                        <LayoutDashboard className="h-4 w-4" />
-                        My Portal
-                      </Link>
+                      {(authUser.role === "business_owner" || authUser.role === "admin") && (
+                        <Link
+                          href="/business-portal"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700"
+                        >
+                          <LayoutDashboard className="h-4 w-4" />
+                          Business Portal
+                        </Link>
+                      )}
+                      {authUser.role === "admin" && (
+                        <Link
+                          href="/admin"
+                          onClick={() => setUserMenuOpen(false)}
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700"
+                        >
+                          <LayoutDashboard className="h-4 w-4" />
+                          Admin Dashboard
+                        </Link>
+                      )}
                       <Link
                         href={`/community/user/${authUser.id}`}
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-700"
                       >
                         <MessageCircle className="h-4 w-4" />
-                        My Profile
+                        Community Profile
                       </Link>
                       <hr className="my-1" />
                       <button
