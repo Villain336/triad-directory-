@@ -2,7 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
 export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+  // Create a response that we can modify
+  let response = NextResponse.next({
+    request: { headers: request.headers },
+  });
+
   const pathname = request.nextUrl.pathname;
 
   // Routes that require authentication
@@ -16,14 +20,19 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
+        getAll() {
+          return request.cookies.getAll();
         },
-        set(name: string, value: string, options: any) {
-          response.cookies.set({ name, value, ...options });
-        },
-        remove(name: string, options: any) {
-          response.cookies.set({ name, value: "", ...options });
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          );
+          response = NextResponse.next({
+            request: { headers: request.headers },
+          });
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          );
         },
       },
     }
@@ -43,7 +52,7 @@ export async function middleware(request: NextRequest) {
     .from("user_profiles")
     .select("role")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
   const role = profile?.role || "user";
 
@@ -57,7 +66,6 @@ export async function middleware(request: NextRequest) {
   // Business portal — business_owner or admin
   if (pathname.startsWith("/business-portal")) {
     if (role !== "business_owner" && role !== "admin") {
-      // Casual user trying to access portal → upgrade prompt
       return NextResponse.redirect(new URL("/auth/upgrade", request.url));
     }
   }

@@ -60,12 +60,18 @@ function LoginForm() {
       await ensureUserProfile(data.user);
     }
 
-    // Hard redirect to ensure cookies are set properly
+    // Smart redirect — read role from profile client-side (server cookies aren't set yet)
     if (redirectTo === "/") {
-      // No explicit redirect — do smart redirect by role
-      const res = await fetch("/api/auth/redirect");
-      const { url } = await res.json();
-      window.location.href = url;
+      const { data: profile } = await supabase
+        .from("user_profiles")
+        .select("role")
+        .eq("id", data.user!.id)
+        .maybeSingle();
+
+      const role = profile?.role || "user";
+      if (role === "admin") window.location.href = "/admin";
+      else if (role === "business_owner") window.location.href = "/business-portal";
+      else window.location.href = "/account";
     } else {
       window.location.href = redirectTo;
     }
