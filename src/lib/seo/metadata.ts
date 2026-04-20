@@ -53,11 +53,21 @@ export function generateCityCategoryMetadata(
   cityName: string,
   citySlug: string,
   categoryName: string,
-  categorySlug: string
+  categorySlug: string,
+  listingCount?: number
 ): Metadata {
+  const year = new Date().getUTCFullYear();
+  const lower = categoryName.toLowerCase();
+  // CTR pattern from §5.1: include N + year when we have real counts.
+  const countPrefix = listingCount && listingCount > 0 ? `${listingCount} ` : "";
+  const title = `${countPrefix}Best ${categoryName} in ${cityName}, NC (${year}) | Verified & Reviewed`;
+  const description =
+    listingCount && listingCount > 0
+      ? `Compare ${listingCount} verified ${lower} serving ${cityName}, NC. Licensed, insured, and reviewed by NCSB. Get free quotes in ${year}.`
+      : `Find verified, licensed ${lower} in ${cityName}, NC. Read first-party reviews, compare ratings, and get free quotes from top-rated ${lower} near you.`;
   return generatePageMetadata({
-    title: `Best ${categoryName} in ${cityName}, NC - Top Rated & Reviewed`,
-    description: `Find the best ${categoryName.toLowerCase()} in ${cityName}, NC. Read reviews, compare ratings, and get quotes from top-rated ${categoryName.toLowerCase()} near you. Free estimates available.`,
+    title,
+    description,
     path: `/${citySlug}/${categorySlug}`,
   });
 }
