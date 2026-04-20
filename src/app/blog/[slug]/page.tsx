@@ -9,6 +9,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import AdSlot from "@/components/ads/AdSlot";
 import NewsletterSignup from "@/components/lead-gen/NewsletterSignup";
+import { renderInlineMarkdown } from "@/lib/markdown/inline";
 
 interface Props {
   params: { slug: string };
@@ -95,12 +96,16 @@ export default function BlogPostPage({ params }: Props) {
               {post.content.split("\n\n").map((paragraph, i) => {
                 if (paragraph.startsWith("## ")) {
                   return (
-                    <h2 key={i}>{paragraph.replace("## ", "")}</h2>
+                    <h2 key={i}>
+                      {renderInlineMarkdown(paragraph.replace(/^## /, ""))}
+                    </h2>
                   );
                 }
                 if (paragraph.startsWith("### ")) {
                   return (
-                    <h3 key={i}>{paragraph.replace("### ", "")}</h3>
+                    <h3 key={i}>
+                      {renderInlineMarkdown(paragraph.replace(/^### /, ""))}
+                    </h3>
                   );
                 }
                 if (paragraph.startsWith("- ")) {
@@ -108,7 +113,9 @@ export default function BlogPostPage({ params }: Props) {
                   return (
                     <ul key={i}>
                       {items.map((item, j) => (
-                        <li key={j}>{item.replace(/^- \*\*(.+?)\*\*:?\s*/, "$1: ").replace(/^- /, "")}</li>
+                        <li key={j}>
+                          {renderInlineMarkdown(item.replace(/^- /, ""))}
+                        </li>
                       ))}
                     </ul>
                   );
@@ -118,12 +125,14 @@ export default function BlogPostPage({ params }: Props) {
                   return (
                     <ol key={i}>
                       {items.map((item, j) => (
-                        <li key={j}>{item.replace(/^\d+\.\s*/, "")}</li>
+                        <li key={j}>
+                          {renderInlineMarkdown(item.replace(/^\d+\.\s*/, ""))}
+                        </li>
                       ))}
                     </ol>
                   );
                 }
-                return <p key={i}>{paragraph}</p>;
+                return <p key={i}>{renderInlineMarkdown(paragraph)}</p>;
               })}
             </div>
 
