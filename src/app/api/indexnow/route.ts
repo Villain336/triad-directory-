@@ -1,4 +1,22 @@
+import { timingSafeEqual } from "node:crypto";
 import { pingIndexNow } from "@/lib/seo/indexnow";
+
+/**
+ * Constant-time string compare. Uses a length-aware dummy compare so the
+ * "wrong length" path takes a comparable amount of time to the "same length"
+ * path, avoiding length-leak side channels.
+ */
+function safeEqual(presented: string, expected: string): boolean {
+  const a = Buffer.from(presented);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) {
+    // Still do a constant-time op of equal length so timing doesn't leak the
+    // length-mismatch fact; then return false.
+    timingSafeEqual(b, b);
+    return false;
+  }
+  return timingSafeEqual(a, b);
+}
 
 /**
  * POST /api/indexnow
@@ -35,7 +53,7 @@ export async function POST(request: Request) {
   const presented = header.toLowerCase().startsWith("bearer ")
     ? header.slice(7).trim()
     : "";
-  if (presented !== expected) {
+  if (!safeEqual(presented, expected)) {
     return Response.json({ ok: false, reason: "unauthorized" }, { status: 401 });
   }
 
