@@ -5,13 +5,16 @@ import { MapPin, ArrowRight, Users } from "lucide-react";
 import { cities, getCityBySlug } from "@/lib/data/cities";
 import { categories, getFeaturedCategories } from "@/lib/data/categories";
 import { getListings } from "@/lib/data/index";
+import { getCityProfile } from "@/lib/data/city-profiles";
 import { generateCityMetadata } from "@/lib/seo/metadata";
 import { generateCityDirectoryJsonLd, generateBreadcrumbJsonLd } from "@/lib/seo/jsonld";
+import { nearestCities } from "@/lib/seo/composition";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import ListingCard from "@/components/listings/ListingCard";
 import AdSlot from "@/components/ads/AdSlot";
 import ContactForm from "@/components/lead-gen/ContactForm";
+import KeyFacts from "@/components/seo/KeyFacts";
 
 interface CityPageProps {
   params: { city: string };
@@ -29,6 +32,8 @@ export function generateMetadata({ params }: CityPageProps): Metadata {
 
 export const revalidate = 3600;
 
+const LAST_UPDATED = new Date().toISOString().slice(0, 10);
+
 export default async function CityPage({ params }: CityPageProps) {
   const city = getCityBySlug(params.city);
   if (!city) notFound();
@@ -36,6 +41,16 @@ export default async function CityPage({ params }: CityPageProps) {
   const listings = await getListings({ citySlug: city.slug });
   const featuredCategories = getFeaturedCategories();
   const featuredListings = listings.filter((l: any) => l.isFeatured).slice(0, 4);
+  const profile = getCityProfile(city.slug);
+  const nearby = nearestCities(city, cities, 5);
+
+  const keyFacts = [
+    { label: "County", value: `${city.county} County, NC` },
+    { label: "Population", value: city.population.toLocaleString() },
+    { label: "Primary ZIPs", value: profile.zipCodes.slice(0, 4).join(", ") || "—" },
+    { label: "Permit authority", value: profile.permitAuthority },
+    { label: "Verified businesses listed", value: `${listings.length}` },
+  ];
 
   return (
     <>
@@ -64,12 +79,15 @@ export default async function CityPage({ params }: CityPageProps) {
             {city.name} Business Directory
           </h1>
           <p className="mt-3 max-w-2xl text-primary-200 text-lg">{city.description}</p>
-          <div className="mt-4 flex items-center gap-4 text-sm text-primary-300">
+          <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-primary-300">
             <span className="flex items-center gap-1">
               <Users className="h-4 w-4" />
               Pop. {city.population.toLocaleString()}
             </span>
-            <span>{listings.length}+ listed businesses</span>
+            <span>{listings.length}+ verified businesses</span>
+            <span>
+              Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED}</time>
+            </span>
           </div>
         </div>
       </section>
@@ -119,22 +137,49 @@ export default async function CityPage({ params }: CityPageProps) {
             {/* SEO Content */}
             <section className="mt-12 prose prose-gray max-w-none">
               <h2>About {city.name}, NC</h2>
-              <p>{city.description}</p>
               <p>
-                Looking for reliable local services in {city.name}? Triad Directory
-                connects you with verified, top-rated businesses across every industry.
-                Whether you need a plumber for an emergency repair, an electrician for a
-                home project, or a restaurant for date night, our directory has you
-                covered.
+                <strong>{city.name}</strong> is {profile.localFlavor}. {city.description}
               </p>
-              <h3>Popular Services in {city.name}</h3>
+              <p>
+                {city.name} has a {profile.climateNotes}, which shapes seasonal demand for
+                the most common home services — HVAC tune-ups in spring and fall, tree
+                service and roofing after summer storms, and plumbing calls during the
+                January–February cold snap.
+              </p>
+              {profile.neighborhoods.length > 0 && (
+                <>
+                  <h3>Neighborhoods served</h3>
+                  <p>
+                    NCSB-listed businesses cover all of {city.name}, including{" "}
+                    {profile.neighborhoods.slice(0, 8).join(", ")}.
+                  </p>
+                </>
+              )}
+              {profile.zipCodes.length > 0 && (
+                <p>
+                  <strong>ZIP codes served:</strong>{" "}
+                  {profile.zipCodes.join(", ")}.
+                </p>
+              )}
+              <h3>Permits &amp; licensing in {city.name}</h3>
+              <p>
+                Building, plumbing, electrical, and mechanical permits in {city.name} are
+                issued by{" "}
+                <a href={profile.permitUrl} rel="noopener noreferrer">
+                  {profile.permitAuthority}
+                </a>
+                . Any licensed contractor on NCSB pulls permits on your behalf — if a
+                business insists you pull the permit yourself on a permit-required job,
+                that's a red flag.
+              </p>
+              <h3>Popular services in {city.name}</h3>
               <ul>
                 {featuredCategories.slice(0, 8).map((cat) => (
                   <li key={cat.slug}>
                     <Link href={`/${city.slug}/${cat.slug}`}>
-                      {cat.name} in {city.name}
+                      {cat.name} in {city.name}, NC
                     </Link>{" "}
-                    - {cat.description}
+                    — {cat.description}
                   </li>
                 ))}
               </ul>
@@ -143,6 +188,8 @@ export default async function CityPage({ params }: CityPageProps) {
 
           {/* Sidebar */}
           <aside className="space-y-6">
+            <KeyFacts facts={keyFacts} heading={`${city.name} at a glance`} />
+
             <AdSlot position="sidebar" />
 
             <div className="card p-5">
@@ -151,24 +198,21 @@ export default async function CityPage({ params }: CityPageProps) {
 
             <AdSlot position="sidebar" />
 
-            {/* Nearby Cities */}
+            {/* Nearby Cities — by actual distance, not just county */}
             <div className="card p-5">
-              <h3 className="font-semibold text-gray-900">Nearby Cities</h3>
+              <h3 className="font-semibold text-gray-900">Nearby cities</h3>
               <ul className="mt-3 space-y-2">
-                {cities
-                  .filter((c) => c.slug !== city.slug && c.county === city.county)
-                  .slice(0, 6)
-                  .map((c) => (
-                    <li key={c.slug}>
-                      <Link
-                        href={`/${c.slug}`}
-                        className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-primary-600"
-                      >
-                        <ArrowRight className="h-3.5 w-3.5" />
-                        {c.name} Directory
-                      </Link>
-                    </li>
-                  ))}
+                {nearby.map((c) => (
+                  <li key={c.slug}>
+                    <Link
+                      href={`/${c.slug}`}
+                      className="flex items-center gap-1.5 text-sm text-gray-600 hover:text-primary-600"
+                    >
+                      <ArrowRight className="h-3.5 w-3.5" />
+                      {c.name}, NC directory
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </aside>

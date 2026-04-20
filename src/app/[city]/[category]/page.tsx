@@ -6,7 +6,14 @@ import { cities, getCityBySlug } from "@/lib/data/cities";
 import { categories, getCategoryBySlug } from "@/lib/data/categories";
 import { getListings } from "@/lib/data/index";
 import { generateCityCategoryMetadata } from "@/lib/seo/metadata";
-import { generateBreadcrumbJsonLd, generateItemListJsonLd } from "@/lib/seo/jsonld";
+import {
+  generateBreadcrumbJsonLd,
+  generateItemListJsonLd,
+  generateFAQPageJsonLd,
+} from "@/lib/seo/jsonld";
+import { composeCityServiceIntro, nearestCities, relatedServicesFor } from "@/lib/seo/composition";
+import { buildCityServiceFAQs } from "@/lib/seo/faq";
+import { getServiceProfile } from "@/lib/data/service-profiles";
 import JsonLd from "@/components/seo/JsonLd";
 import Breadcrumbs from "@/components/layout/Breadcrumbs";
 import ListingGrid from "@/components/listings/ListingGrid";
@@ -14,6 +21,9 @@ import AdSlot from "@/components/ads/AdSlot";
 import QuoteRequestForm from "@/components/lead-gen/QuoteRequestForm";
 import ExitIntentModal from "@/components/lead-gen/ExitIntentModal";
 import AgencyCTA from "@/components/agency/AgencyCTA";
+import FAQBlock from "@/components/seo/FAQBlock";
+import CostTable from "@/components/seo/CostTable";
+import KeyFacts from "@/components/seo/KeyFacts";
 
 interface CategoryPageProps {
   params: { city: string; category: string };
@@ -29,14 +39,17 @@ export function generateStaticParams() {
   return params;
 }
 
-export function generateMetadata({ params }: CategoryPageProps): Metadata {
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const city = getCityBySlug(params.city);
   const category = getCategoryBySlug(params.category);
   if (!city || !category) return {};
-  return generateCityCategoryMetadata(city.name, city.slug, category.name, category.slug);
+  const listings = await getListings({ citySlug: city.slug, categorySlug: category.slug });
+  return generateCityCategoryMetadata(city.name, city.slug, category.name, category.slug, listings.length);
 }
 
 export const revalidate = 3600;
+
+const LAST_UPDATED = new Date().toISOString().slice(0, 10);
 
 export default async function CityCategoryPage({ params }: CategoryPageProps) {
   const city = getCityBySlug(params.city);
@@ -44,6 +57,11 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
   if (!city || !category) notFound();
 
   const listings = await getListings({ citySlug: city.slug, categorySlug: category.slug });
+  const service = getServiceProfile(category.slug, category.name);
+  const intro = composeCityServiceIntro(city, category, listings.length);
+  const faqs = buildCityServiceFAQs(city, category);
+  const nearby = nearestCities(city, cities, 3);
+  const related = relatedServicesFor(category, categories, 3);
 
   return (
     <>
@@ -63,6 +81,7 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
           category.slug
         )}
       />
+      <JsonLd data={generateFAQPageJsonLd(faqs)} />
       <ExitIntentModal
         categoryName={category.name}
         cityName={city.name}
@@ -90,12 +109,12 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
             Best {category.name} in {city.name}, NC
           </h1>
           <p className="mt-3 max-w-2xl text-primary-200">
-            Find top-rated {category.name.toLowerCase()} in {city.name}. Read reviews,
-            compare ratings, and get free quotes from trusted local{" "}
-            {category.name.toLowerCase()}.
+            {listings.length > 0
+              ? `${listings.length} verified ${category.name.toLowerCase()} serving ${city.name}. Licensed, insured, and first-party reviewed.`
+              : `Finding licensed, insured ${category.name.toLowerCase()} in ${city.name}. Claim your free listing to appear here.`}
           </p>
-          <p className="mt-2 text-sm text-primary-300">
-            {listings.length} {category.name.toLowerCase()} found in {city.name}
+          <p className="mt-2 text-xs text-primary-300">
+            Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED}</time>
           </p>
         </div>
       </section>
@@ -104,7 +123,14 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
         <div className="grid gap-10 lg:grid-cols-3">
           {/* Main Content */}
           <div className="lg:col-span-2">
-            <AdSlot position="banner-top" className="mb-6" />
+            {/* Composed intro — unique per (city, service) */}
+            <section className="prose prose-gray max-w-none">
+              {intro.paragraphs.map((p, i) => (
+                <p key={i}>{p}</p>
+              ))}
+            </section>
+
+            <AdSlot position="banner-top" className="my-6" />
 
             <ListingGrid
               listings={listings}
@@ -114,8 +140,7 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
             {listings.length === 0 && (
               <div className="mt-6 rounded-xl bg-primary-50 p-6 text-center">
                 <h3 className="font-semibold text-gray-900">
-                  Are you a {category.name.toLowerCase().replace(/s$/, "")} in{" "}
-                  {city.name}?
+                  Are you a {service.nameSingular} in {city.name}?
                 </h3>
                 <p className="mt-1 text-sm text-gray-600">
                   Get listed and start receiving leads today.
@@ -126,62 +151,91 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
               </div>
             )}
 
+            {/* Cost table */}
+            <CostTable service={service} cityName={city.name} serviceName={category.name} />
+
+            {/* FAQ — paired with FAQPage JSON-LD above */}
+            <FAQBlock faqs={faqs} />
+
             {/* Agency CTA */}
-            <div className="mt-8">
+            <div className="mt-10">
               <AgencyCTA variant="inline" cityName={city.name} categoryName={category.name} />
             </div>
 
-            {/* SEO Content */}
-            <section className="mt-12 prose prose-gray max-w-none">
-              <h2>
-                Find the Best {category.name} in {city.name}, NC
-              </h2>
-              <p>
-                Looking for reliable {category.name.toLowerCase()} in {city.name},{" "}
-                North Carolina? Triad Directory makes it easy to find, compare, and
-                contact the top-rated {category.name.toLowerCase()} serving the{" "}
-                {city.name} area.
-              </p>
-              <p>
-                Every {category.name.toLowerCase().replace(/s$/, "")} listed on our
-                directory includes ratings, reviews, contact information, and service
-                details so you can make an informed decision. Many of our premium-listed{" "}
-                {category.name.toLowerCase()} offer free estimates and same-day service.
-              </p>
-              <h3>
-                Why Use Triad Directory to Find {category.name} in {city.name}?
-              </h3>
-              <ul>
-                <li>Verified, licensed professionals</li>
-                <li>Real customer ratings and reviews</li>
-                <li>Free quotes with no obligation</li>
-                <li>Click-to-call for instant connections</li>
-                <li>Side-by-side comparison of services and pricing</li>
-              </ul>
-
-              <h3>
-                {category.name} in Other Triad Cities
-              </h3>
-              <ul>
-                {cities
-                  .filter((c) => c.slug !== city.slug && c.featured)
-                  .map((c) => (
+            {/* Horizontal internal linking — §4.5 */}
+            <section className="mt-12 grid gap-8 sm:grid-cols-2">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  {category.name} in nearby cities
+                </h2>
+                <ul className="mt-3 space-y-2">
+                  {nearby.map((c) => (
                     <li key={c.slug}>
-                      <Link href={`/${c.slug}/${category.slug}`}>
-                        {category.name} in {c.name}
+                      <Link
+                        href={`/${c.slug}/${category.slug}`}
+                        className="inline-flex items-center gap-1.5 text-primary-700 hover:text-primary-800 hover:underline"
+                      >
+                        <ArrowRight className="h-3.5 w-3.5" />
+                        {category.name} in {c.name}, NC
                       </Link>
                     </li>
                   ))}
-              </ul>
+                </ul>
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Related services in {city.name}
+                </h2>
+                <ul className="mt-3 space-y-2">
+                  {related.map((c) => (
+                    <li key={c.slug}>
+                      <Link
+                        href={`/${city.slug}/${c.slug}`}
+                        className="inline-flex items-center gap-1.5 text-primary-700 hover:text-primary-800 hover:underline"
+                      >
+                        <ArrowRight className="h-3.5 w-3.5" />
+                        {c.name} in {city.name}, NC
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </section>
 
-              {/* Helpful Resources */}
-              <h3>Helpful Resources</h3>
-              <ul>
-                <li><Link href="/tools/cost-estimator">How much do {category.name.toLowerCase()} cost in NC?</Link></li>
-                <li><Link href="/community">Ask the community about {category.name.toLowerCase()}</Link></li>
-                <li><Link href={`/${city.slug}`}>All services in {city.name}</Link></li>
-                <li><Link href="/emergency">24/7 Emergency services</Link></li>
-                <li><Link href="/business-portal">Are you a {category.name.toLowerCase().replace(/s$/, "")}? Manage your listing</Link></li>
+            {/* Resource links */}
+            <section className="mt-10">
+              <h2 className="text-xl font-bold text-gray-900">Helpful resources</h2>
+              <ul className="mt-3 grid gap-2 text-gray-700 sm:grid-cols-2">
+                <li>
+                  <Link href="/how-we-verify" className="text-primary-700 hover:underline">
+                    How NCSB verifies {category.name.toLowerCase()}
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/tools/cost-estimator" className="text-primary-700 hover:underline">
+                    {category.name} cost estimator
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/${city.slug}`} className="text-primary-700 hover:underline">
+                    All services in {city.name}
+                  </Link>
+                </li>
+                <li>
+                  <Link href={`/categories/${category.slug}`} className="text-primary-700 hover:underline">
+                    {category.name} across North Carolina
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/community" className="text-primary-700 hover:underline">
+                    Ask the community about {category.name.toLowerCase()}
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/claim-listing" className="text-primary-700 hover:underline">
+                    Are you a {service.nameSingular}? Claim your listing
+                  </Link>
+                </li>
               </ul>
             </section>
           </div>
@@ -193,12 +247,13 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
               defaultCategory={category.slug}
             />
 
+            <KeyFacts facts={intro.keyFacts} heading={`${category.name} in ${city.name} — at a glance`} />
+
             <AdSlot position="sidebar" />
 
-            {/* Related Categories */}
             <div className="card p-5">
               <h3 className="font-semibold text-gray-900">
-                More Services in {city.name}
+                More services in {city.name}
               </h3>
               <ul className="mt-3 space-y-2">
                 {categories
