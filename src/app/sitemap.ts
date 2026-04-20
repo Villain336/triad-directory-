@@ -62,6 +62,7 @@ function staticSitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/case-studies`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
     { url: `${SITE_URL}/business-portal`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/how-we-verify`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE_URL}/nc-home-services-cost-index-2026`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
   ];
 }
 

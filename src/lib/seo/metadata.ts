@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { SITE_NAME, SITE_URL, SITE_DESCRIPTION } from "@/lib/constants";
+import { getVerificationMetadata } from "@/lib/seo/verification";
 
 interface MetadataParams {
   title: string;
@@ -118,4 +119,5 @@ export const defaultMetadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
+  verification: getVerificationMetadata(),
 };
