@@ -18,8 +18,19 @@ export interface FAQ {
 const CURRENT_YEAR = new Date().getUTCFullYear();
 
 function usd(n: number): string {
-  if (n === 0) return "commission-based";
   return `$${Math.round(n).toLocaleString("en-US")}`;
+}
+
+function isCommissionService(service: {
+  averageCostLow: number;
+  averageCostTypical: number;
+  averageCostHigh: number;
+}): boolean {
+  return (
+    service.averageCostLow === 0 &&
+    service.averageCostTypical === 0 &&
+    service.averageCostHigh === 0
+  );
 }
 
 export function buildCityServiceFAQs(city: City, category: Category): FAQ[] {
@@ -27,13 +38,18 @@ export function buildCityServiceFAQs(city: City, category: Category): FAQ[] {
   const service = getServiceProfile(category.slug, category.name);
   const lowerService = category.name.toLowerCase();
   const singular = service.nameSingular;
+  const commissionBased = isCommissionService(service);
 
-  const costRange = `${usd(service.averageCostLow)}–${usd(service.averageCostHigh)} ${service.costUnit}`;
+  const costRange = commissionBased
+    ? "commission-based"
+    : `${usd(service.averageCostLow)}–${usd(service.averageCostHigh)} ${service.costUnit}`;
 
   const faqs: FAQ[] = [
     {
       question: `How much does a ${singular} cost in ${city.name}, NC?`,
-      answer: `Most ${lowerService} jobs in ${city.name} run ${costRange}, with the middle of the market at around ${usd(service.averageCostTypical)}. Actual pricing varies with scope, access, parts, and emergency vs. scheduled service. Use the cost table on this page or request free quotes to benchmark.`,
+      answer: commissionBased
+        ? `${singular.charAt(0).toUpperCase() + singular.slice(1)}s in ${city.name} are typically compensated on commission rather than by flat fee, so there's no direct per-visit cost for homeowners. Fees are usually negotiated at the close of the transaction. Focus on experience, specialties, and reviews when choosing.`
+        : `Most ${lowerService} jobs in ${city.name} run ${costRange}, with the middle of the market at around ${usd(service.averageCostTypical)}. Actual pricing varies with scope, access, parts, and emergency vs. scheduled service. Use the cost table on this page or request free quotes to benchmark.`,
     },
     {
       question: `Do ${lowerService} in North Carolina need a license?`,
@@ -89,7 +105,9 @@ export function buildCategoryHubFAQs(category: Category): FAQ[] {
   return [
     {
       question: `How much do ${lowerService} cost in North Carolina?`,
-      answer: `Typical ${lowerService} pricing across NC ranges ${usd(service.averageCostLow)}–${usd(service.averageCostHigh)} ${service.costUnit}, with the middle of the market at about ${usd(service.averageCostTypical)}. Costs vary by city and project scope; check any city page for local pricing detail.`,
+      answer: isCommissionService(service)
+        ? `${lowerService.charAt(0).toUpperCase() + lowerService.slice(1)} in North Carolina are typically paid on commission rather than a fixed hourly or per-visit rate, so there's no direct cost comparison. Evaluate them on experience, specialty, and reviews instead.`
+        : `Typical ${lowerService} pricing across NC ranges ${usd(service.averageCostLow)}–${usd(service.averageCostHigh)} ${service.costUnit}, with the middle of the market at about ${usd(service.averageCostTypical)}. Costs vary by city and project scope; check any city page for local pricing detail.`,
     },
     {
       question: `Do ${lowerService} need a license in NC?`,

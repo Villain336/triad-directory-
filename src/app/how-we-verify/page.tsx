@@ -13,7 +13,10 @@ export const metadata: Metadata = generatePageMetadata({
   path: "/how-we-verify",
 });
 
-const LAST_UPDATED = new Date().toISOString().slice(0, 10);
+// Editorial date — bump this when the verification methodology actually
+// changes, not on every build. This is a static content page, so the
+// displayed "Last updated" should reflect content edits, not deploy time.
+const LAST_UPDATED = "2026-04-20";
 
 export default function HowWeVerifyPage() {
   return (

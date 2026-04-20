@@ -84,6 +84,15 @@ const COST_TEMPLATES = [
     `The cost table further down breaks pricing into Low / Typical / High tiers (${usd(low)} / ${usd(typical)} / ${usd(high)} ${unit}) so you can sanity-check any quote you receive.`,
 ];
 
+const COMMISSION_TEMPLATES = [
+  (service: string) =>
+    `${capitalizeFirst(service)} are typically paid on commission rather than by flat fee, so there's no per-visit cost for homeowners and businesses — compensation comes from the transaction itself.`,
+  (service: string) =>
+    `Pricing for ${service} is commission-based, not hourly, so there's no direct out-of-pocket cost to compare. Use profiles to compare experience, specialties, and reviews instead.`,
+  (service: string) =>
+    `${capitalizeFirst(service)} don't charge homeowners an hourly or per-visit rate — they're compensated on commission at the close of a deal, so focus on experience and track record rather than quote shopping.`,
+];
+
 const LICENSE_TEMPLATES = [
   (service: string, authority: string) =>
     `${capitalizeFirst(service)} in North Carolina must be licensed by ${authority}. Every business on this page has had its license number verified within the last 90 days.`,
@@ -137,7 +146,6 @@ function joinList(items: string[], max = 6): string {
 }
 
 function usd(n: number): string {
-  if (n === 0) return "commission-based";
   return `$${Math.round(n).toLocaleString("en-US")}`;
 }
 
@@ -195,15 +203,23 @@ export function composeCityServiceIntro(
   } else {
     licenseParts.push(pick(NO_LICENSE_TEMPLATES, seed, 5)(lowerService));
   }
-  licenseParts.push(
-    pick(COST_TEMPLATES, seed, 6)(
-      lowerService,
-      service.averageCostLow,
-      service.averageCostTypical,
-      service.averageCostHigh,
-      service.costUnit,
-    ),
-  );
+  const isCommissionBased =
+    service.averageCostLow === 0 &&
+    service.averageCostTypical === 0 &&
+    service.averageCostHigh === 0;
+  if (isCommissionBased) {
+    licenseParts.push(pick(COMMISSION_TEMPLATES, seed, 6)(lowerService));
+  } else {
+    licenseParts.push(
+      pick(COST_TEMPLATES, seed, 6)(
+        lowerService,
+        service.averageCostLow,
+        service.averageCostTypical,
+        service.averageCostHigh,
+        service.costUnit,
+      ),
+    );
+  }
   paragraphs.push(licenseParts.join(" "));
 
   // 5. Season + emergency + closer paragraph
@@ -225,7 +241,9 @@ export function composeCityServiceIntro(
     { label: "Licensing authority", value: service.ncLicenseAuthority },
     {
       label: "Typical NC cost",
-      value: `${usd(service.averageCostLow)}–${usd(service.averageCostHigh)} ${service.costUnit}`,
+      value: isCommissionBased
+        ? "Commission-based (no hourly rate)"
+        : `${usd(service.averageCostLow)}–${usd(service.averageCostHigh)} ${service.costUnit}`,
     },
     { label: "Best time to book", value: service.bestSeason },
     { label: "Emergency availability", value: service.emergencyDemand === "high" ? "Often 24/7" : service.emergencyDemand === "medium" ? "Some same-day" : "Scheduled only" },

@@ -41,12 +41,12 @@ export function generateMetadata({ params }: Props): Metadata {
 
 export const revalidate = 3600;
 
-const LAST_UPDATED = new Date().toISOString().slice(0, 10);
-
 export default async function CategoryAcrossCitiesPage({ params }: Props) {
   const category = getCategoryBySlug(params.category);
   if (!category) notFound();
 
+  // Computed inside the component so ISR revalidation produces a fresh date.
+  const lastUpdated = new Date().toISOString().slice(0, 10);
   const listings = await getListings({ categorySlug: category.slug });
   const featuredCities = getFeaturedCities();
   const service = getServiceProfile(category.slug, category.name);
@@ -82,7 +82,7 @@ export default async function CategoryAcrossCitiesPage({ params }: Props) {
             and first-party reviewed by NCSB.
           </p>
           <p className="mt-2 text-xs text-primary-300">
-            Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED}</time>
+            Last updated <time dateTime={lastUpdated}>{lastUpdated}</time>
           </p>
         </div>
       </section>
