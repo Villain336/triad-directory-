@@ -49,13 +49,15 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 export const revalidate = 3600;
 
-const LAST_UPDATED = new Date().toISOString().slice(0, 10);
-
 export default async function CityCategoryPage({ params }: CategoryPageProps) {
   const city = getCityBySlug(params.city);
   const category = getCategoryBySlug(params.category);
   if (!city || !category) notFound();
 
+  // Computed inside the component so ISR revalidation (every `revalidate`
+  // seconds) produces a fresh timestamp — a module-level constant would be
+  // frozen to the deploy/cold-start date.
+  const lastUpdated = new Date().toISOString().slice(0, 10);
   const listings = await getListings({ citySlug: city.slug, categorySlug: category.slug });
   const service = getServiceProfile(category.slug, category.name);
   const intro = composeCityServiceIntro(city, category, listings.length);
@@ -114,7 +116,7 @@ export default async function CityCategoryPage({ params }: CategoryPageProps) {
               : `Finding licensed, insured ${category.name.toLowerCase()} in ${city.name}. Claim your free listing to appear here.`}
           </p>
           <p className="mt-2 text-xs text-primary-300">
-            Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED}</time>
+            Last updated <time dateTime={lastUpdated}>{lastUpdated}</time>
           </p>
         </div>
       </section>

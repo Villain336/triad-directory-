@@ -9,10 +9,41 @@ interface Props {
 /**
  * Featured-snippet-friendly Low / Typical / High cost table.
  * Matches the pattern called out in §5.4 of the strategy.
+ *
+ * For commission-based services (real-estate agents, insurance brokers,
+ * financial advisors) where all three cost tiers are zero, we render an
+ * explanatory callout instead of a misleading "—" table.
  */
 export default function CostTable({ service, cityName, serviceName }: Props) {
-  const formatUsd = (n: number) => (n === 0 ? "—" : `$${n.toLocaleString("en-US")}`);
   const scope = cityName ? `${serviceName} in ${cityName}, NC` : `${serviceName} in NC`;
+  const isCommissionBased =
+    service.averageCostLow === 0 &&
+    service.averageCostTypical === 0 &&
+    service.averageCostHigh === 0;
+
+  if (isCommissionBased) {
+    return (
+      <section className="mt-10" aria-label="How pricing works">
+        <h2 className="text-2xl font-bold text-gray-900">
+          How much does {serviceName.toLowerCase()} cost {cityName ? `in ${cityName}` : "in NC"}?
+        </h2>
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-gray-700">
+          <p>
+            <strong>{serviceName} are commission-based, not hourly.</strong> There's no direct
+            per-visit or hourly cost for homeowners — compensation is paid out of the transaction
+            itself (e.g. as a percentage of a home sale or policy premium).
+          </p>
+          <p className="mt-2">
+            When comparing {serviceName.toLowerCase()} in {cityName ? `${cityName}, NC` : "NC"},
+            focus on years of experience, specialties, recent transactions, and first-party
+            reviews instead of quote shopping.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  const formatUsd = (n: number) => `$${n.toLocaleString("en-US")}`;
 
   return (
     <section className="mt-10" aria-label="Typical cost">

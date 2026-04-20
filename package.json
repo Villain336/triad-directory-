@@ -7,7 +7,6 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postbuild": "next-sitemap",
     "seed": "tsx src/scripts/seed-from-google.ts"
   },
   "repository": {

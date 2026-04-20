@@ -32,12 +32,12 @@ export function generateMetadata({ params }: CityPageProps): Metadata {
 
 export const revalidate = 3600;
 
-const LAST_UPDATED = new Date().toISOString().slice(0, 10);
-
 export default async function CityPage({ params }: CityPageProps) {
   const city = getCityBySlug(params.city);
   if (!city) notFound();
 
+  // Computed inside the component so ISR revalidation produces a fresh date.
+  const lastUpdated = new Date().toISOString().slice(0, 10);
   const listings = await getListings({ citySlug: city.slug });
   const featuredCategories = getFeaturedCategories();
   const featuredListings = listings.filter((l: any) => l.isFeatured).slice(0, 4);
@@ -86,7 +86,7 @@ export default async function CityPage({ params }: CityPageProps) {
             </span>
             <span>{listings.length}+ verified businesses</span>
             <span>
-              Last updated <time dateTime={LAST_UPDATED}>{LAST_UPDATED}</time>
+              Last updated <time dateTime={lastUpdated}>{lastUpdated}</time>
             </span>
           </div>
         </div>
