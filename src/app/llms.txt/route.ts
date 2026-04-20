@@ -42,6 +42,9 @@ export function GET() {
   lines.push(`- [Home](${SITE_URL}/)`);
   lines.push(`- [Service categories](${SITE_URL}/categories)`);
   lines.push(`- [Cost estimator](${SITE_URL}/tools/cost-estimator)`);
+  lines.push(
+    `- [NC Home Services Cost Index 2026 — benchmark prices by trade](${SITE_URL}/nc-home-services-cost-index-2026)`,
+  );
   lines.push(`- [Community Q&A](${SITE_URL}/community)`);
   lines.push(`- [Blog](${SITE_URL}/blog)`);
   lines.push(`- [Emergency services](${SITE_URL}/emergency)`);

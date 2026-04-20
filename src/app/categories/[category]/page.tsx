@@ -18,6 +18,7 @@ import ListingGrid from "@/components/listings/ListingGrid";
 import AdSlot from "@/components/ads/AdSlot";
 import FAQBlock from "@/components/seo/FAQBlock";
 import CostTable from "@/components/seo/CostTable";
+import ServiceDefinitionList from "@/components/seo/ServiceDefinitionList";
 
 interface Props {
   params: { category: string };
@@ -123,6 +124,7 @@ export default async function CategoryAcrossCitiesPage({ params }: Props) {
             </h2>
             <ListingGrid listings={listings} showCity />
 
+            <ServiceDefinitionList service={service} categoryName={category.name} />
             <CostTable service={service} serviceName={category.name} />
             <FAQBlock faqs={faqs} />
           </div>
