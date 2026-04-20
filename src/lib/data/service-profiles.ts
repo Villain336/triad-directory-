@@ -347,7 +347,7 @@ export const serviceProfiles: Record<string, ServiceProfile> = {
     ncLicenseRequired: true,
     ncLicenseAuthority: "NC Secretary of State Securities Division / FINRA",
     licenseUrl: "https://www.sosnc.gov/divisions/securities",
-    averageCostLow: 0,
+    averageCostLow: 500,
     averageCostTypical: 2500,
     averageCostHigh: 15000,
     costUnit: "per year or % of AUM",

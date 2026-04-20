@@ -34,8 +34,9 @@ export default function CostTable({ service, cityName, serviceName }: Props) {
             itself (e.g. as a percentage of a home sale or policy premium).
           </p>
           <p className="mt-2">
-            When comparing {serviceName.toLowerCase()} in {scope}, focus on years of experience,
-            specialties, recent transactions, and first-party reviews instead of quote shopping.
+            When comparing {serviceName.toLowerCase()} in {cityName ? `${cityName}, NC` : "NC"},
+            focus on years of experience, specialties, recent transactions, and first-party
+            reviews instead of quote shopping.
           </p>
         </div>
       </section>
